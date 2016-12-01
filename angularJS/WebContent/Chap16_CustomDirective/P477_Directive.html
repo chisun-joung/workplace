@@ -1,0 +1,68 @@
+<html ng-app="exampleApp">
+<head>
+	<title>Directives</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		var app = angular.module("exampleApp", []);
+		app.controller("defaultCtrl", function ($scope) {
+			$scope.products = [
+				{ name: "Apples", category: "Fruit", price: 1.20, expiry: 10 },
+				{ name: "Bananas", category: "Fruit", price: 2.42, expiry: 7 },
+				{ name: "Pears", category: "Fruit", price: 2.02, expiry: 6 }
+			];
+		});
+		app.directive('unorderedList',[function(){
+			return {
+				restrict: 'AECM',
+				replace: true,
+				template: '<p></p>',
+				// 지금까지 사용했던 링크 함수 정의
+				link: function(scope,element,attrs){
+					// tag로 사용할 경우 다른 속성명으로 사용할 데이터 이름을 넘긴다.
+					var data = scope[attrs['unorderedList'] || attrs['listSource']];
+					
+					// 표시 할 항목이 지정되지 않으면 가격을 기본값으로 출력 => 주석으로 쓸 경우 대비
+					var propertyExpression = attrs['listProperty'] || 'price | currency';
+					if(angular.isArray(data)){
+						
+						var listElem = angular.element('<ul>');
+						element.append(listElem);
+
+						for(var i = 0; i < data.length; i++){
+							var itemElement = angular.element('<li>').text( scope.$eval(propertyExpression, data[i]) );
+							listElem.append(itemElement);
+						}
+					}
+				}
+			}
+			
+		}])
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>Products</h3>
+		</div>
+		<div class="panel-body">
+			<!-- A => Attribute -->
+			<div unordered-list='products' list-property="price | currency"></div>
+			
+			<!-- C => Class -->
+			<div class='unordered-list: products' list-property="price | currency"></div>
+			
+			<!-- E => Element. tag 역할을 할 경우 속성 역할을 하지 못함. -->
+			<unordered-list list-source='products' list-property="price | currency"></unordered-list>
+			
+			<!-- M => 주석. 속성은 1개만 전달 가능 -->
+			<!-- directive: unordered-list products -->
+		</div>
+	</div>
+</body>
+</html>
+
+
+
+

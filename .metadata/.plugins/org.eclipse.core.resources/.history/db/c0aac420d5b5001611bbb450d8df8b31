@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Controllers</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('exampleApp',[]);
+		app.controller('topLevelCtrl', ['$scope', function ($scope) {
+			$scope.data = {value : 'Hello Adam'};
+			
+			$scope.reverse = function(){
+				$scope.data.value = $scope.data.value.split('').reverse().join('');
+			}
+			
+			$scope.caseFn = function(){
+				var result = [];
+				angular.forEach($scope.data.value.split(''), function(data, index){
+					if(index % 2 == 0 ) {
+						result.push(data.toUpperCase());
+					} else {
+						result.push(data.toLowerCase());
+					}
+				})
+				$scope.data.value = result.join('');
+			}
+		}])
+		app.controller('firstChildCtrl', ['$scope', function ($scope) {
+			$scope.caseFn = function(){
+				var result = [];
+				angular.forEach($scope.data.value.split(''), function(data, index){
+					result.push(data.toUpperCase());
+				})
+				$scope.data.value = result.join('');
+			}
+		}])
+		app.controller('secondChildCtrl', ['$scope', function ($scope) {
+			$scope.caseFn = function(){
+				$scope.data.value = $scope.data.value.toLowerCase();
+			}
+		}])
+	</script>
+</head>
+<body ng-controller="topLevelCtrl">
+
+	<div class="well">
+		<h4>Top Level Controller</h4>
+		<div class="input-group">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" ng-click="reverse()">Reverse</button>
+				<button class="btn btn-default" type="button" ng-click="caseFn()">Case</button>
+			</span>
+			<input class="form-control" ng-model="dataValue">
+		</div>
+	</div>
+
+	<div class="well" ng-controller="firstChildCtrl">
+		<h4>First Child Controller</h4>
+		<div class="input-group">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" ng-click="reverse()">Reverse</button>
+				<button class="btn btn-default" type="button" ng-click="caseFn()">Case</button>
+			</span>
+			<input class="form-control" ng-model="dataValue">
+		</div>
+	</div>    
+
+	<div class="well" ng-controller="secondChildCtrl">
+		<h4>Second Child Controller</h4>
+		<div class="input-group">
+			<span class="input-group-btn">
+				<button class="btn btn-default" type="button" ng-click="reverse()">Reverse</button>
+				<button class="btn btn-default" type="button" ng-click="caseFn()">Case</button>
+				<button class="btn btn-default" type="button">Shift</button>
+			</span>
+			<input class="form-control" ng-model="dataValue">
+		</div>
+	</div>    
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>A07 Decorator</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var demo = angular.module('demo', []);
+		demo.value('user', {
+			firstName: 'Hong',
+			lastName: 'GilDong',
+			getName: function(){
+				return this.firstName + ' ' + this.lastName;
+			}
+		});
+		
+		demo.factory('demoFactory', ['$filter','user',function($filter,user){
+			var factoryName = 'Demo Factory';
+			var user = user;
+			var today = new Date();
+			
+			var getName = function(){
+				return user.firstName + ' ' + user.lastName;
+			}
+			var getToday = function(){
+				return $filter('date')(today, 'short');
+			}
+			return {
+				factoryName: factoryName,
+				getName: getName,
+				getToday: getToday,
+				user: user
+			}
+		}]);
+
+		var app = angular.module('app', ['demo']);
+		
+		// 사용자 정의 서비스 중 value, factory, service는 config 시점에서
+		// $provide 서비스의 속성 decorator를 이용해 추가, 변경이 가능하다.
+		
+		// constant, provider는 config 시점에서 직접 접근이 가능하므로
+		// decorator를 이용한 변경은 지원하지 않는다. (접근하면 에러)
+		app.config(['$provide', function($provide){
+			console.log($provide);
+			// $provide.decorator('수정할서비스명', ['$delegate', function($delegate){
+			//
+			// $delegate는 앞에 기술한 수정할서비스 객체를 의미한다.
+			//	return $delegate;
+			//}])
+			
+			$provide.decorator('user', ['$delegate', function($delegate){
+				console.log($delegate)
+				
+				// 수정은 항상 $delegate를 이용해 수정
+				$delegate.firstName= '홍';
+				$delegate.age = 20;
+				$delegate.address = '서울특별시..';
+				
+				// 위에서 수정한 객체를 리턴해서 controller에서 
+				// 수정된 객체를 사용하도록 하기 위해 리턴
+				return $delegate;
+			}])
+			
+			$provide.decorator('demoFactory', ['$delegate','$filter', 
+			                             function($delegate, $filter){
+				
+				$delegate.getToday = function(){
+					return $filter('date')(new Date(), 'medium');
+				}
+				
+				$delegate.lg = '엘지로 222';
+				$delegate.getInfo = function(){
+					return 'LG 소프트 컬리지';
+				}
+				
+				return $delegate;
+			}])
+		}]);
+		
+		app.controller('mainCtrl', ['$scope','demoFactory',function($scope,demoFactory){
+			$scope.factory = demoFactory.factoryName;
+			$scope.getName = demoFactory.getName();
+			$scope.user = demoFactory.user;
+			$scope.today = demoFactory.getToday();
+			
+			// 추가한 값
+			$scope.lg = demoFactory.lg;
+			$scope.info = demoFactory.getInfo();
+		}])
+	</script>
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service
+				<span class="label label-primary">Decorator</span>
+			</h3>
+		</div>
+
+
+		<div class="panel-body" ng-controller="mainCtrl">
+			<div>Factory Name: {{factory}}</div>
+			<div>User: {{getName}}</div>
+			<div>Add User: {{user.age}}, {{user.address}}</div>
+			<div>Today: {{today}}</div>
+			
+			<div>LG: {{lg}}, {{info}}</div>
+		</div>
+	</div>
+
+</body>
+</html>
+
+

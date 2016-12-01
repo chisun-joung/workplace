@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Transclusion</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/ng-template" id="template">
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				<h4>This is the panel</h4>
+			</div>
+			<!-- 
+				지시자(태그) 내부의 요소는 지정한 template으로 교체되므로
+				원래 그 내부에 있던 요소들은 표시되지 않는다(대체됨)
+				그 내부 요소를 그대로 표시하고자 할 경우 사용
+				ng-transclude가 포함된 태그 내부에 원래 요소가 포함된다.
+				지시자 속성에 transclude: true 형태로 기술할 필요가 있음.
+			 -->
+			<div class="panel-body" ng-transclude>
+			</div>
+		</div>
+	</script>
+	<script type="text/javascript">
+		angular.module("exampleApp", [])
+			.directive("panel", function () {
+				return {
+					transclude: true,
+					link: function (scope, element, attrs) {
+						scope.dataSource = "directive";
+					},
+					restrict: "E",
+					scope: true,
+					template: function () {
+						return angular.element(
+							document.querySelector("#template")).html();
+					}
+				}
+			})
+			.controller("defaultCtrl", function ($scope) {
+				$scope.dataSource = "controller";
+			});
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+	<panel>
+		The data value comes from the: {{dataSource}}
+	</panel>
+</body>
+</html>

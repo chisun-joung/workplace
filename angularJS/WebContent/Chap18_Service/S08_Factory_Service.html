@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+<meta charset="UTF-8">
+<title>Factory Service</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+<link href="bootstrap.css" rel="stylesheet" />
+<link href="bootstrap-theme.css" rel="stylesheet" />
+<script type="text/javascript">
+	function DemoClass(user, name, $filter) {
+		this.userName = name;
+		this.user = user;
+
+		var jumsu = [ 10, 20, 30, 0, 0 ];
+
+		var setKor = function(kor) {
+			jumsu[0] = kor;
+		}
+		this.getKor = function() {
+			return jumsu[0];
+		}
+		this.getTotal = function() {
+			jumsu[3] = jumsu[0] + jumsu[1] + jumsu[2];
+			return jumsu[3];
+		}
+		this.getAvg = function() {
+			jumsu[4] = jumsu[3] / 3;
+			return jumsu[4];
+		}
+		this.getToday = function() {
+			return $filter('date')(new Date(), 'medium');
+		}
+	}
+
+	var demo = angular.module('demo', []);
+	demo.constant('name', 'Hong');
+	demo.constant('user', {
+		age : 30,
+		address : 'Seoul',
+		getInfo : function() {
+			return this.age + " : " + this.address;
+		}
+	});
+
+	// 기존의 클래스를 서비스로 변환해서 사용
+	demo.service('demoService', DemoClass);
+	// 클래스 내부에서 사용자 정의 서비스나 내장 서비스를 주입받아 사용 가능.
+	DemoClass.$inject = [ 'user', 'name', '$filter' ];
+	
+	
+	// factory로 변환.
+	// 변환시 인스턴스를 생성할 필요가 있다.
+	demo.factory('demoFactory', ['user','name','$filter', 
+	                             function(user,name,$filter){
+		var cls = new DemoClass(user, name, $filter);
+		return cls;
+	}]);
+
+	var app = angular.module('app', [ 'demo' ]);
+	app.controller('mainCtrl', [ '$scope', 'demoService',
+			function($scope, demoService) {
+				$scope.name = demoService.userName;
+				$scope.user = demoService.user;
+				$scope.kor = demoService.getKor();
+
+				// 허용하지 않은 setKor 호출
+				//demoService.setKor(100);
+
+				$scope.total = demoService.getTotal();
+				$scope.avg = demoService.getAvg();
+				
+				$scope.today = demoService.getToday();
+
+				$scope.change = function() {
+					$scope.user.age = 100;
+					$scope.name = "홍길동";
+					$scope.total = 300;
+				}
+
+				// total 값이 변경되면 평균은 다시 산출
+				$scope.$watch('total', function(nv) {
+					$scope.avg = nv / 3;
+				})
+
+			} ])
+	
+	app.controller('second', ['$scope','demoFactory', 
+		                    function ($scope, demoFactory) {
+			$scope.name = demoFactory.userName;
+			$scope.user = demoFactory.user;
+			$scope.kor = demoFactory.getKor();
+			
+			// 허용하지 않은 setKor 호출
+			//demoFactory.setKor(100);
+			
+			$scope.total = demoFactory.getTotal();
+			$scope.avg = demoFactory.getAvg();
+			$scope.today = demoFactory.getToday();
+			
+			$scope.change = function(){
+				$scope.user.age = 100;
+				$scope.name = "홍길동";
+				$scope.total = 300;
+			}
+			
+			// total 값이 변경되면 평균은 다시 산출
+			$scope.$watch('total', function(nv){
+				$scope.avg = nv / 3;
+			})
+			
+		}])
+</script>
+
+</head>
+<body>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service <span class="label label-primary">Factory /
+					Service</span>
+			</h3>
+		</div>
+
+
+		<div class="panel-body" ng-controller="mainCtrl">
+			<div>Name: {{name}}</div>
+			<div>Today: {{today}}</div>
+			<div>User: {{user.age}} - {{user.address}}</div>
+			<div>Jumsu Kor: {{kor}}, Total: {{total}}, Avg: {{avg}}</div>
+			<button class="btn btn-primary" ng-click="change()">Click</button>
+		</div>
+		
+		
+		<div class="panel-body" ng-controller="second">
+			<div>Name: {{name}}</div>
+			<div>Today: {{today}}</div>
+			<div>User: {{user.age}} - {{user.address}}</div>
+			<div>Jumsu Kor: {{kor}}, Total: {{total}}, Avg: {{avg}}</div>
+			<button class="btn btn-primary" ng-click="change()">Click</button>
+		</div>
+		
+	</div>
+
+</body>
+</html>

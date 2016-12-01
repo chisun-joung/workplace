@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>A01 Data Binding</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+</head>
+<body>
+
+	<div class="panel-default">
+		<div class="panel-heading">
+			<h3>Invoice</h3>
+		</div>
+		<div class="panel-body">
+			Quantity: <input type="number" class="form-control" min="0">
+		</div>
+		<div class="panel-body">
+			Cost: <input type="number" class="form-control" min="0">
+		</div>
+		<div class="panel-body">
+			<b>Total: </b>
+			<span></span>
+		</div>
+	</div>
+	
+	
+</body>
+</html>

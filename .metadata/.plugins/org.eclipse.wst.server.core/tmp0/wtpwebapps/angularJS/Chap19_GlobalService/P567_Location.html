@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<meta charset="UTF-8">
+	<title>A02 Location</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var app = angular.module('exampleApp', []);
+		
+		// $location 서비스는 주소줄의 패스를 조작할 목적으로 사용.
+		// $route를 이용한 single web page 제작등에 이용된다
+		// 페이지 이동 등의 명령은 존재하지 않는다. 이는 자바스크립트 이용
+		app.config(['$locationProvider', function($locationProvider){
+			$locationProvider.html5Mode(false);	//hashbang mode
+			//$locationProvider.html5Mode(true);		//html5 mode
+		}])
+		app.controller('defaultCtrl', ['$scope','$location', 
+		                               function ($scope,$location) {
+			
+			console.log($location.absUrl())
+			// 성공적으로 주소줄이 변경되면 $locationChangeSuccess 이벤트 전하
+			$scope.$on('$locationChangeSuccess', function(evt, data){
+				$scope.absUrl = $location.absUrl();
+				$scope.url = $location.url();
+				$scope.port = $location.port();
+				$scope.protocol = $location.protocol();
+			});
+			
+			var pathID = searchID = hashID = 0;
+			
+			$scope.setUrl = function(path){
+				switch(path){
+				case 'reset':
+					pathID = searchID = hashID = 0;
+					$location.path('');
+					$location.search('');
+					$location.hash('');
+					break;
+				case 'path':
+					pathID++;
+					// 주소줄 뒤에 지정한 패스를 추가한다. 
+					$location.path('PathA' + pathID + '/pathB' + pathID);
+					break;
+				case 'search':
+					searchID++;
+					// 주소줄 뒤에 지정한 key, value 쌍을 추가한다. 
+					// 버튼을 누를때마다 추가된다.
+					$location.search('KeyA' + searchID, 'valueA' + searchID);
+					break;
+				case 'hash':
+					hashID++;
+					// 지정한 값만 추가
+					$location.hash('hash' + hashID);
+					break;
+				case 'url':
+					// 전체 경로를 규칙에 맞게 기술해 주어야 한다.
+					pathID++; searchID++; hashID++;
+					$location.url('/PathA' + pathID + '/PathB' + pathID + 
+							'?searchA=' + 'valueA' + '&searchB=' + 'valueB' + 
+							'#hash' + hashID);
+				}
+			}
+		}])
+	
+	</script>
+</head>
+<body>
+	<div class="panel panel-default" ng-controller="defaultCtrl">
+		<h4 class="panel-heading">URL</h4>
+		<div class="panel-body">
+			<ul>
+				<li>absUrl: {{absUrl}}</li>
+				<li>URL: {{url}}</li>
+				<li>Port: {{port}}</li>
+				<li>Protocol: {{protocol}}</li>
+				<li>Path：URL의 Path(Search parameter와 hash를 뺀 부분)을 지정</li>
+				<li>Search: query parameter(?name1=value1&name2=value2)를 지정</li>
+				<li>Hash：hash "#value"를 지정</li>
+				<li>URL：Path、Search、Hash를 포함하여 지정</li>
+			</ul>
+		</div>
+		<div class="panel-body">
+			<p>The URL is: {{url}}</p>
+			<div class="btn-group ">
+				<button class="btn btn-primary" ng-click="setUrl('reset')">Reset</button>
+				<button class="btn btn-primary" ng-click="setUrl('path')">Path</button>
+				<button class="btn btn-primary" ng-click="setUrl('hash')">Hash</button>
+				<button class="btn btn-primary" ng-click="setUrl('search')">Search</button>
+				<button class="btn btn-primary" ng-click="setUrl('url')">URL</button>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

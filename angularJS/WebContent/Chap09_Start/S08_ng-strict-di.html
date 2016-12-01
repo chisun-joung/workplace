@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<!-- 1.3에서 추가된 기능. script의 압축화를 할 경우(min 파일 제작) 반드시 지정 -->
+<html ng-app="app" ng-strict-di>
+<head>
+	<meta charset="UTF-8">
+	<title>ng-strict-di</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.js"></script>
+	<script type="text/javascript">
+	
+		// 실질적인 모듈 정의.
+		var app = angular.module('app', []);
+		
+		// 모듈 이름이 app를 찾아 아래의 내용을 app 모듈에 추가
+		// app 모듈이 없으면 에러 발생
+		var app = angular.module('app');
+		// 압축화를 하면 $scope의 이름의 임의의 이름으로 변경되는데
+		// 함수 안에서 사용하는 $scope도 함수의 매개변수와 같은 이름으로
+		// 변경된다는 확정이 없음
+		app.controller('bedCtrl', function($scope){
+			$scope.a = 10;
+			$scope.b = 20;
+		})
+		
+		app.controller('good1', ['$scope','$filter', 
+		                         	function(sc,$filter){
+			sc.a = 10;
+			sc.b = 20;
+			sc.today = $filter('date')(new Date, 'medium');
+		}])
+		
+		function MainClass($scope,$filter){
+			$scope.name = "Hong";
+			$scope.today = $filter('date')(new Date, 'medium');
+		}
+		
+		app.controller('good2', MainClass);
+		// MainClass에서 사용한 AngularJS의 서비스에 대한 값을 주입해 주어야 함
+		MainClass.$inject = ['$scope', '$filter'];
+		
+	</script>
+</head>
+<body>
+
+	<div class="panel-default">
+		<div class="panel-body">
+			I can add: {{a + b}}
+
+			<p>The controller could not be instantiated, due to relying
+				on automatic function annotations (which are disabled in
+				strict mode). As such, the content of this section is not
+				interpolated, and there should be an error in your web console.
+			</p>
+		</div>
+
+		<div class="panel-body" ng-controller="good1">
+			I can add: {{a + b}} - {{today}}
+
+			<p>This renders because the controller does not fail to
+				instantiate, by using explicit annotation style (see
+				script.js for details)
+			</p>
+		</div>
+
+		<div class="panel-body" ng-controller="good2">
+			Name: <input ng-model="name"><br>
+			Hello, {{name}} - {{today}}
+			<p>This renders because the controller does not fail to
+				instantiate, by using explicit annotation style
+				(see script.js for details)
+			</p>
+		</div>
+		
+	</div>
+
+</body>
+</html>

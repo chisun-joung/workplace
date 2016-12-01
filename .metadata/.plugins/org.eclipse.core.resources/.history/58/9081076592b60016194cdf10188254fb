@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Constant</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var demo = angular.module('demo', []);
+		
+		// constant service 
+		// 1. 상수를 정의할 목적으로 기술한다.
+		// 2. 사용하는 module의 config 시점에서 객체형의 값을 변경 할 수 있다.
+		//		(기본적으로는 변경하지 않을 목적으로 사용)
+		// 3. 기본형과 객체형의 타입에 따라 변경이 가능/불가능
+		// 4. 정의는 key, value 형태로 정의
+		demo.constant('name', 'Hong');
+		demo.constant('user', {
+			age: 30,
+			address: 'Seoul',
+			getInfo: function(){
+				return this.age + " : " + this.address;
+			}
+		});
+		
+		// 서비스의 이용
+		var app = angular.module('app', ['demo']);
+		
+		// 사용할 서비스는 반드시 의존성 주입을 받아 사용해야 함
+		app.controller('mainCtrl', ['$scope','name','user',
+		                    function ($scope,name,user) {
+			$scope.name = name;
+			$scope.age = user.age;
+			$scope.address = user.address;
+			$scope.info = user.getInfo();
+		}])
+	</script>
+</head>
+<body ng-controller="mainCtrl">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service
+				<span class="label label-primary">Constant</span>
+			</h3>
+		</div>
+
+
+		<div class="panel-body">
+			<div>Name: {{name}}</div>
+			<div>User Age: {{age}}, User Address: {{address}}</div>
+			<div>Method: {{info}}</div>
+		</div>
+		<div class="panel-body"></div>
+	</div>
+	
+	
+</body>
+</html>

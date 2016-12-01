@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Injector</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var demo = angular.module('demo', []);
+		demo.value('user', {
+			firstName: 'Hong',
+			lastName: 'GilDong',
+			getName: function(){
+				return this.firstName + ' ' + this.lastName;
+			}
+		});
+		
+		demo.factory('demoFactory', ['$filter','user',function($filter,user){
+			var factoryName = 'Demo Factory';
+			var user = user;
+			var today = new Date();
+			
+			var getName = function(){
+				return user.firstName + ' ' + user.lastName;
+			}
+			var getToday = function(){
+				return $filter('date')(today, 'short');
+			}
+			return {
+				factoryName: factoryName,
+				getName: getName,
+				getToday: getToday,
+				user: user
+			}
+		}]);
+
+		var app = angular.module('app', []);
+		app.controller('mainCtrl', ['$scope', function ($scope) {
+			$scope.name = '홍길동';
+		}])
+		
+		window.onload = function() {
+			var injector = angular.injector(['ng', 'demo']);
+			
+			var filter = injector.has('$filter');
+			if(filter){
+				var dateFilter = injector.get('$filter');
+				var today = dateFilter('date')(new Date() , 'medium');
+				
+				document.getElementById("today").innerText = today;
+			}
+		}
+	</script>
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service
+				<span class="label label-primary">Injector</span>
+			</h3>
+		</div>
+
+
+		<div class="panel-body" ng-controller="mainCtrl">
+			<div>Name: {{name}}</div>
+		</div>
+		
+		<div id="today"></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>DOM API Services</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		angular.module("exampleApp", [])
+		.controller("defaultCtrl", ['$scope','$document', function ($scope,$document) {
+			
+			// javascript의 document 객체가 아닌 jquery의 document 객체.
+			// jquery 객체로 변환해서 서비스를 해 준다
+			console.log($document)
+		}]);
+	</script>
+</head>
+<body ng-controller="defaultCtrl" class="well">
+	<button class="btn btn-primary">Click Me</button>
+</body>
+</html>

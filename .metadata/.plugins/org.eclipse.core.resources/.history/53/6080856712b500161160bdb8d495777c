@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app>
+<head>
+	<meta charset="UTF-8">
+	<title>A01 Data Binding</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript" src="../angular-1.2.9/angular.js"></script>
+</head>
+<body>
+
+	<div class="panel-default">
+		<div class="panel-heading">
+			<h3>Invoice</h3>
+		</div>
+		<div class="panel-body">
+			Quantity: <input type="number" class="form-control" min="0" ng-bind="qty">
+		</div>
+		<div class="panel-body">
+			Cost: <input type="number" class="form-control" min="0" ng-bind="cost">
+		</div>
+		<div class="panel-body">
+			<b>Total: {{qty * const}}</b>
+			<span></span>
+		</div>
+	</div>
+	
+	
+</body>
+</html>

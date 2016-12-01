@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Event</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('app', []);
+		app.controller('mainCtrl', ['$scope',function($scope){
+			$scope.outer = $scope.inner = $scope.bubbling = 0;
+
+		}]);
+	</script>
+</head>
+<body ng-controller="mainCtrl">
+
+	<div class="panel">
+		<div class="panel-header well">
+			<h3>$event</h3>
+		</div>
+
+		<div class="panel-body">
+			<p>외부 영역</p>
+			<button class="btn btn-primary">Inner</button>
+			<button class="btn btn-warning">Stop</button>
+		</div>
+		
+		<div class="panel-body">
+			<div>외부 클릭: {{outer}}</div>
+			<div>내부 클릭: {{inner}}</div>
+			<div>StopPropagation Click: {{bubbling}}</div>
+		</div>
+	</div>
+	
+</body>
+</html>

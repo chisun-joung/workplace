@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Directive Scopes</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/ng-template" id="scopeTemplate">
+		<div class="panel-body">
+			<!-- 자신의 스코프(자식스코프)에 각 객체를 생성하고 개별 사용
+				부모가 같은 이름의 변수를 선언하면 그 변수를 복사해서 사용.
+				객체형과 기본형은 prototype 상속에 따른다.
+			 -->
+			<p>Name: <input ng-model="data.name"></p>
+			<p>City: <input ng-model="city"></p>
+			<p>Country: <input ng-model="country"></p>
+		</div>
+	</script>
+	<script type="text/javascript">
+		angular.module("exampleApp", [])
+			.directive("scopeDemo", function () {
+				return {
+					template: function(){
+						return angular.element(document.querySelector('#scopeTemplate')).html();
+					},
+					// 자신이 속한 controller 내부의 $scope와 완전 단절
+					// 자식 스코프는 독립적인 공간을 갖게 된다.
+					scope: {
+						
+					}
+				}
+			})
+		.controller("scopeCtrl", function ($scope) {
+			$scope.data = {
+				name : 'Hong'
+			}
+			$scope.city = 'Seoul';
+			
+		})
+	</script>
+</head>
+<body ng-controller="scopeCtrl" >
+	<div class="panel panel-default">
+		<div class="panel-body" scope-demo></div>
+		<div class="panel-body" scope-demo></div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Factory</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+	
+		var demo = angular.module('demo',[]);
+		demo.constant('name', 'Hong');
+		demo.constant('user', {
+			age: 30,
+			address: 'Seoul',
+			getInfo: function(){
+				return this.age + " : " + this.address;
+			}
+		});
+		demo.factory('demoFactory',['name','user',function(name, user){
+			var jumsu = [10,20,30,0,0];
+			var userName = name;
+			var user = user;
+			var setKor = function(kor){
+				jumsu[0] = kor;
+			}
+			var getKor = function(){
+				return jumsu[0];
+			}
+			var getTotal = function(){
+				jumsu[3] = jumsu[0] + jumsu[1] + jumsu[2];
+				return jumsu[3];
+			}
+			var getAvg = function(){
+				jumsu[4] = jumsu[3] /3 ;
+				return jumsu[4];
+			}
+			return {
+				name : userName,
+				user : user,
+				getKor : getKor,
+				getAvg : getAvg,
+				getTotal : getTotal
+			}
+		}]);
+		
+		var app = angular.module('app', ['demo']);
+		app.controller('mainCtrl', ['$scope', 'demoFactory',function ($scope, demoFactory) {
+			$scope.name = demoFactory.name;
+			$scope.user = demoFactory.user;
+			$scope.kor = demoFactory.getkor();
+			$scope.total = demoFactory.getTotal();
+			$scope.avg = demoFactory.getAvg();
+			
+		}])
+	</script>
+</head>
+<body>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service
+				<span class="label label-primary">Factory</span>
+			</h3>
+		</div>
+
+
+		<div class="panel-body" ng-controller="mainCtrl">
+			<div>{{name}}</div>
+			<div>{{user}}</div>
+			<div>{{kor}}</div>
+			<div>{{total}}</div>
+			<div>{{avg}}</div>
+			<div></div>
+			<button class="btn btn-primary">Click</button>
+		</div>
+		
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+
+<!-- 선언한 많은 모듈 중어떤 모듈을 메인 모듈로 사용할 것인가를 지정할 필요가 있다 -->
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>A02 Controller</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	
+	<!-- 1.3 버전으로 변경후 테스트.
+		1.3 버전에서는 module별로 등록해서 사용할 필요가 있음.
+	 -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.js"></script>
+	<script type="text/javascript">
+		// 사용할 메인 모듈을 선언
+		// angular.module('모둘명', ['의존성주입을 받을 다른 모듈명'])
+		angular.module('app', [])
+			// $scope는 this의 역할 + view(dom)에 값을 연결하는 작업이
+			// 결함된 객체
+			// $rootScope(최상위 this)로 부터 $new 연산자를 통해 상속형태로
+			// 작성된다.
+			// $scope는 AngularJS의 서비스 객체이므로 사용시 주입을 받아
+			// 사용할 필요가 있다
+			.controller('defaultCtrl', function($scope){
+				$scope.qty = 3;
+				$scope.cost = 5;
+				
+				$scope.inCurr = 'EUR';
+				$scope.currencies = ['USD', 'EUR', 'CNY'];
+				$scope.rate = {'USD': 1, 'EUR': 1.23, 'CNY':6.87}
+				
+				$scope.total = function(outCurr){
+					//return $scope.qty * $scope.cost * 
+					//		$scope.rate[outCurr] / $scope.rate[$scope.inCurr];
+					return convertRate($scope.qty*$scope.cost, outCurr, $scope.inCurr);
+				}
+				
+				var convertRate = function(amount,outCurr,inCurr){
+					// this로 선언된 항목은 화면에서 binding식으로 불러 사용할 수 없음.
+					return amount * $scope.rate[outCurr] / $scope.rate[inCurr];
+				}
+				
+				$scope.pay = function(){
+					alert('Thank You!!!')
+				}
+			})
+	
+	</script>
+</head>
+<body>
+
+	<!-- 각 태그마다 사용할 컨트럴러(Class 파일)을 지정
+		Class 파일은 인스턴스로 사용.
+		var mc = new MyClass() => MyClass as mc
+	 -->
+	<div class="panel-default" ng-controller="defaultCtrl">
+		<div class="panel-heading">
+			<h3>Invoice</h3>
+		</div>
+
+		<div class="panel-body col-sm-5">
+			<div>Quantity: </div>
+			<input type="number" class="form-control" min="0" ng-model="qty">
+		</div>
+
+		<div class="form-inline panel-body">
+			<div>Cost: </div>
+			<div class="form-group">
+				<input type="number" id="cost" class="form-control" min="0" ng-model="cost">
+			</div>
+			<div class="form-group">
+				<select class="form-control" ng-model="inCurr">
+				<!-- option tag가 currencies가 3개 만들어 지면서
+				내부적으로 c라는 변수를 갖게 된다 -->
+					<option ng-repeat="c in currencies">{{c}}</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="well">
+			<b>Total: </b>
+			<!-- 통화 필터 사용 => 표현값 | 필터명 : 필터옵션 
+			<span> {{ total('USD') | currency }}</span>
+			<span> {{ total('EUR') | currency }}</span>
+			<span> {{ total('CNY') | currency }}</span>
+			-->
+			
+			<span ng-repeat="c in currencies"> {{ total(c) | currency : c }} &nbsp;</span>
+			
+			<button class="btn btn-primary" ng-click="pay()">Pay</button>
+		</div>
+		
+	</div>
+
+</body>
+</html>

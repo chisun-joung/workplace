@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>A02 Module DI</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		app = angular.module('app', []);
+		app.controller('mainCtrl', ['$scope', function($scope) {
+			
+			$scope.result = "불합격"
+			
+			// $watch는 변수는 $scope를 생략한 변수명만 문자열로 기술
+			// 함수는 함수의 이름만 기술(문자열이 아님)
+			$scope.$watch('total', function(newValue, oldValue, scope){
+				console.log(newValue, oldValue);
+				console.log(scope);
+				if(newValue >= 90){
+					$scope.result = "합격"
+				}else{
+					$scope.result = "불합격"
+				}
+			})
+		}]);
+		
+	</script>
+</head>
+
+<body ng-controller="mainCtrl">
+	<div class="panel-header well">
+		<h3>$event</h3>
+	</div>
+		
+	<div class="panel-body">
+		<input type="text" class="form-control" ng-model="total">
+	</div>
+	
+	<div class="panel-body">
+		<span>{{result}}</span>
+	</div>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Controllers</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		angular.module("exampleApp", [])
+			.controller("simpleCtrl", function ($scope, $rootScope) {
+				// 상위 컨트럴러에서 하위 컨트럴러로 이벤트를 통한 데이터 전송
+				
+				$scope.addresses = {};
+				
+				$scope.saveAddress = function(key, zip){
+					if(angular.isDefined(key) && angular.isDefined(zip)){
+						//$scope.addresses[key] = zip;
+						
+						// address라는 이름으로 객체 하나를 전송.
+						$rootScope.$broadcast('address', {'type':key, 'zip':zip});
+					}
+				}
+				
+				// 하위 스코프에서 상위 스코프가 전달한 이벤트를 잡아서 각 스코프의 변수에 저장
+				$scope.$on('address', function(event, data){
+					console.log(event);
+					console.log(data);
+					$scope.addresses[data.type] = data.zip;
+				})
+				
+				$scope.copyAddress = function(){
+					// defined check 등 필요
+					$scope.shippingZip = $scope.addresses.billingZip;
+				}
+
+			});
+	</script>
+</head>
+<body>
+
+	<div class="well" ng-controller="simpleCtrl">
+		<h4>Billing Zip Code</h4>
+		<div class="form-group">
+			<input class="form-control" ng-model="billingZip">
+		</div>
+		<button class="btn btn-primary" ng-click="saveAddress('billingZip', billingZip)">
+			Save Billing
+		</button>
+		
+		{{ addresses }}
+	</div>
+
+	<div class="well" ng-controller="simpleCtrl">
+		<h4>Shipping Zip Code</h4>
+		<div class="form-group">
+			<input class="form-control" ng-model="shippingZip">
+		</div>
+		<button class="btn btn-primary" ng-click="copyAddress()">
+			Use Billing
+		</button>
+		<button class="btn btn-primary" ng-click="saveAddress('shippingZip', shippingZip)">
+			Save Shipping
+		</button>
+		
+		{{ addresses }}
+	</div>
+	
+	
+</body>
+</html>
+
+
+

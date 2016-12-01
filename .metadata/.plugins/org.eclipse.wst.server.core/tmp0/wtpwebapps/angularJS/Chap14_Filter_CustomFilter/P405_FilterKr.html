@@ -1,0 +1,104 @@
+<html ng-app="exampleApp">
+<head>
+	<title>Filters</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	
+	<!-- 각 표현할 나라의 지역 코드만 올리면 다른 작업 없이 그 지역 언어로 표시됨 -->
+	<script type="text/javascript" src="https://code.angularjs.org/1.2.9/i18n/angular-locale_ko-kr.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		angular.module("exampleApp", [])
+			.controller("defaultCtrl", function ($scope) {
+				$scope.products = [
+					{ name: "Apples", category: "Fruit", price: 1.20, expiry: 10 },
+					{ name: "Bananas", category: "Fruit", price: 2.42, expiry: 7 },
+					{ name: "Pears", category: "Fruit", price: 2.02, expiry: 6 },
+
+					{ name: "Tuna", category: "Fish", price: 20.45, expiry: 3 },
+					{ name: "Salmon", category: "Fish", price: 17.93, expiry: 2 },
+					{ name: "Trout", category: "Fish", price: 12.93, expiry: 4 },
+
+					{ name: "Beer", category: "Drinks", price: 2.99, expiry: 365 },
+					{ name: "Wine", category: "Drinks", price: 8.99, expiry: 365 },
+					{ name: "Whiskey", category: "Drinks", price: 45.99, expiry: 365 }
+				];
+				
+				$scope.setDate = function(date){
+					var today = new Date();
+					return today.setDate(today.getDate() + date);
+				}
+				
+				
+				$scope.today = new Date();
+				$scope.num = 12345678.23456;
+				
+			});
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Products
+				<span class="label label-primary">{{products.length}}</span>
+			</h3>
+		</div>
+
+		<div class="panel-body">
+			<table class="table table-striped table-bordered table-condensed">
+				<thead>
+					<tr>
+						<td>Name</td>
+						<td>Category</td>
+						<td>Expiry</td>
+						<td class="text-right">Price</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="p in products">
+						<!-- filter는 {{}}에서 {{문자열 or 변수명 | 필터명 [:옵션..] }} -->
+						<td>{{p.name | uppercase }}</td>
+						<td>{{p.category | lowercase }}</td>
+						<td>{{ setDate(p.expiry) | date : 'yyyy-MM-dd EEEE hh:mm:ss' }}</td>
+						<td class="text-right">{{p.price | currency }}</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<!-- 416 page 단축형 -->
+			<div>{{ today | date : 'medium' }}</div>
+			<div>{{ today | date : 'short' }}</div>
+			
+			<!-- 날짜만 단축형으로  -->
+			<div>{{ today | date : 'fullDate' }}</div>
+			<div>{{ today | date : 'longDate' }}</div>
+			<div>{{ today | date : 'mediumDate' }}</div>
+			<div>{{ today | date : 'shortDate' }}</div>
+			
+			<!-- 시간만 단축형으로  -->
+			<div>{{ today | date : 'mediumTime' }}</div>
+			<div>{{ today | date : 'shortTime' }}</div>
+			
+			
+			<!-- 통화에 관련된 옵션 -->
+			<div> {{ '12.34' | currency : 'WON ' }}</div>
+			
+			
+			<!-- 숫자에 관련된 필터 -->
+			<div>{{num}}</div>
+			<div>{{num | number }}</div>
+			<div>{{num | number : 2 }}</div>
+			<div>{{num | number : -2 }}</div>
+		</div>
+
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+

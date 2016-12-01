@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Controllers</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	
+	<script>
+		
+		var app = angular.module('exampleApp', []);
+		app.controller('simpleCtrl', function($scope){
+			$scope.clickCounter = 0;
+			
+			$scope.plus = function(){
+				$scope.clickCounter++;
+			}
+			
+			//angular에서 jquery를 사용하기 위해서는 jquery 객체로 변환을
+			// 할 필요가 있다. 명령은 angular.element("요소명")
+			// $('<button>')
+			var btn = angular.element("<button>");
+			console.log(btn);
+			btn.text("PLUS");
+			btn.addClass('btn btn-primary');
+			
+			var first = angular.element(document.getElementById("first"));
+			console.log(first);
+			first.append(btn);
+			
+			// Angular의 이벤트가 발생해야 자동으로 $apply()가 호출됨.
+			// jquery에 의한 이벤트 발생. => $apply()가 호출 안됨.
+			// 이렇게 자바스크립트, 제이쿼리가 $scope의 변수, 함수를 호출해서
+			// $scope의 값을 조작한 경우는 강제적으로 $apply()를 호출해서
+			// $digest가 관리하는 변수의 변경 사항을 체크할 필요가 있다.
+			btn.on('click', function(evt){
+				//$scope.plus();
+				//$scope.$apply();		// 강제 호출
+				
+				$scope.$apply(function(){
+					$scope.plus();
+				})
+			})
+		})
+		
+		
+		// jquery로 angular의 scope내의 변수를 조작
+		$(function(){
+			$('#one').on('click', function(evt){
+				console.log("working")
+				
+				// controller가 걸려져 있는 태그의 id가 필요.
+				// scope()는 지정한 태그의 controller의 참조를 가져온다.
+				var scope = angular.element(document.getElementById('angularRegion')).scope();
+				scope.plus();
+				scope.$apply();
+			})
+		})
+	</script>
+</head>
+<body>
+	<div id="angularRegion" class="well" ng-controller="simpleCtrl">            
+		<h4>AngularJS</h4>
+		<div class="checkbox">
+			<button ng-click="plus()">Click Me!</button>
+		</div>
+		Click counter: {{clickCounter}}
+	</div>
+	
+	<div class="well" id="first">
+		<h4>jQuery UI</h4>
+		<button id="one">Click Me!</button>
+	</div>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Module</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var demo = angular.module('demo', []);
+		demo.config([function(){
+			console.log("Demo Config")
+		}])
+		demo.run([function(){
+			console.log("Demo Run")
+		}])
+		
+		// view에 해당
+		demo.filter('demoFilter', [function(){
+			console.log("DemoFilter 생성자 함수")
+			return function(data){
+				console.log("DemoFilter 실행 함수")
+				return data.toUpperCase();
+			}
+		}])
+		
+		// view에 해당
+		demo.directive('demoTag', [function(){
+			// 독립적으로 사용할 수 있는 함수는 link 함수만..
+			console.log("demoTag 생성자 함수")
+			return function(scope, element, attrs, ctrl){
+				console.log("demoTag 링크 함수")
+				element.css('color', 'orange');
+			}
+		}])
+		
+		// model에 해당
+		demo.factory('demoFactory', [function(){
+			return{
+				name: '홍길동'
+			}
+		}])
+		
+		// view에 해당
+		demo.controller('demoCtrl', ['$scope', function($scope){
+			$scope.address = 'Seoul';
+		}]);
+		
+		
+		var app = angular.module('app', ['demo']);
+		
+		// demo module의 서비나 내장 서비스의 초기값을 변경 등에 사용
+		app.config([function(){
+			console.log("app Config")
+		}])
+		app.run([function(){
+			console.log("app Run")
+		}])
+		
+		app.controller('mainCtrl', ['$scope','demoFactory', 
+		                            function ($scope, demoFactory) {
+			$scope.name = demoFactory.name;
+		}])
+	</script>
+</head>
+<body ng-controller="mainCtrl">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 demo-tag>
+				{{ 'Custeom Service' | demoFilter }}
+				<span class="label label-primary">Module</span>
+			</h3>
+		</div>
+
+		<div class="panel-body" demo-tag> {{ 'My name is Shin' | demoFilter }} </div>
+		<div class="panel-body"> {{ name }} </div>
+		
+	</div>
+	
+	<div class="panel panel-default" ng-controller="demoCtrl">
+		<div class="panel-heading">
+			<h3 demo-tag>
+				{{ 'Custeom Service' | demoFilter }}
+				<span class="label label-primary">Module</span>
+			</h3>
+		</div>
+
+		<div class="panel-body" demo-tag> {{ address | demoFilter }} </div>
+	</div>
+	
+</body>
+</html>

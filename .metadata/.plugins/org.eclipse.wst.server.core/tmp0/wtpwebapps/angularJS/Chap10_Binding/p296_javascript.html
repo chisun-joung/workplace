@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>P296_JavaScript</title>
+<script type="text/javascript">
+	var Parent = function(){};
+	var Child = function(){};
+	
+	//부모 클래스에 속성을 prototype으로 정의
+	Parent.prototype.name = 'Hong';
+	Parent.prototype.user = {
+		age: 20,
+		address: 'Seoul'
+	}
+	
+	// 자식이 부모의 속성을 받아서 사용(상속)
+	Child.prototype = new Parent();
+	
+	// 인스턴스 생성
+	var parent = new Parent();
+	var child = new Child();
+	
+	// 값 확인
+	console.log("변경 전")
+	console.log("Parent name: " + parent.name);
+	console.log("Parent age: " + parent.user.age);
+	console.log("Parent address: " + parent.user.address);
+	console.log("child name: " + child.name);
+	console.log("child age: " + child.user.age);
+	console.log("child address: " + child.user.address);
+	
+	// 자식에서 값 변경
+	child.name = "일지매";
+	child.user.age = 100;
+	child.user.address = "서울특별시";
+	
+	console.log("변경 후")
+	console.log("Parent name: " + parent.name);
+	console.log("Parent age: " + parent.user.age);
+	console.log("Parent address: " + parent.user.address);
+	console.log("child name: " + child.name);
+	console.log("child age: " + child.user.age);
+	console.log("child address: " + child.user.address);
+	
+	
+	
+	
+</script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Controllers</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script>
+		
+		var app = angular.module('exampleApp', []);
+		app.controller('simpleCtrl', function($scope){
+			$scope.clickCounter = 0;
+			
+			$scope.plus = function() {
+				$scope.clickCounter++;
+			}
+			// angularJS 에서 jQuery를 사용하기 위해서는 angular.element("요소명") ==> jquery 객체
+			// $('<button>')
+			var btn = angular.element('<button>');
+			console.log(btn);
+			btn.text("PLUS");
+			btn.addClass('btn btn-primary');
+			
+			angular.element(document.getElementById('first')).append(btn);
+			
+			btn.on('click', function(event){
+				$scope.plus();
+				$scope.$apply();
+			})
+			
+			
+		})
+		
+	</script>
+</head>
+<body>
+	<div id="angularRegion" class="well" ng-controller="simpleCtrl">            
+		<h4>AngularJS</h4>
+		<div class="checkbox">
+			<button ng-click="plus()">Click Me!</button>
+		</div>
+		Click counter: {{clickCounter}}
+	</div>
+	<div class="well" id="first">
+		<h4>jQuery UI</h4>
+		<button id="btn">Click Me!</button>
+	</div>
+</body>
+</html>

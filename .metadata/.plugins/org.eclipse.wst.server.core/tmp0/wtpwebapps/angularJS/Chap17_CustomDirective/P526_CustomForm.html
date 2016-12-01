@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>CustomForms</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/ng-template" id="triTemplate">
+		<div class="well">
+			<div class="btn-group">
+				<button class="btn btn-default">Yes</button>
+				<button class="btn btn-default">No</button>
+				<button class="btn btn-default">Not Sure</button>
+			</div>
+		</div>
+	</script>
+	<script>
+		angular.module("exampleApp", [])
+		.controller("defaultCtrl", function ($scope) {
+			$scope.dataValue = "Not Sure";
+		})
+		
+		.directive('triButton', [function(){
+			return {
+				restrict: 'AE',
+				template: document.getElementById('triTemplate').innerText,
+				require: 'ngModel',
+				link: function(scope,element,attrs,ctrl){
+					var btns = element.find('button');
+					
+					var setUpdate = function(value){
+						for(var i = 0; i < btns.length; i++){
+							btns.eq(i).removeClass('btn-primary');
+							
+							if(btns.eq(i).text() == value){
+								btns.eq(i).addClass('btn btn-primary');
+							}
+						}
+					}
+					
+					//setUpdate('No')
+					
+					// ngModel에서 변경된 값을 받아오는 명령은 ngModel의 
+					// $viewValue(?)가 받아온디
+					// ctrl => ngModel의 controller를 의미
+					// $render 함수 내부에서 받아서 처리 할 작업을 기술.
+					ctrl.$render = function(){
+						//console.log(ctrl.$viewValue);
+						setUpdate(ctrl.$viewValue);
+					}
+					
+					element.on('click', function(evt){
+						//console.log(evt.currentTarget);
+						console.log(evt.target.innerText);
+						
+						// 선택된 값을 $setViewValue를 통해 다른 ngModel에 전파
+						ctrl.$setViewValue(evt.target.innerText);
+						scope.$apply();
+						
+						// 자신의 선택된 버튼으로 값 변경
+						setUpdate(evt.target.innerText);
+					})
+					
+				}
+			}
+		}]);
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+	<div><tri-button ng-model="dataValue"/></div>
+	<div class="well">
+			Value:
+			<select ng-model="dataValue">
+				<option>Yes</option>
+				<option>No</option>
+				<option>Not Sure</option>
+			</select>
+	</div>
+</body>
+</html>

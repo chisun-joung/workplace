@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Directive Scopes</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/ng-template" id="scopeTemplate">
+		<div class="panel-body">
+			<p>Data Value: {{local.name}}</p>
+			<input ng-model="local.name" />
+		</div>
+		<div class="panel-body">
+			<p>Data Value: {{city}}</p>
+			<input ng-model="city" />
+		</div>
+		<div>Country: {{getCountry()}}</div>
+	</script>
+	<script type="text/javascript">
+		angular.module("exampleApp", [])
+			.directive("scopeDemo", function () {
+				return {
+					template: function() {
+						return angular.element(document.querySelector("#scopeTemplate")).html();
+					},
+					scope:{
+						// 연결관계를 끊고 자신이 속한 컨트롤러에서 필요한 데이터만
+						// 연결해서 사용.
+						// 서로 같은 주소값을 참조. 변수명 참조. 기본형도 동일
+						// 디렉티브내부에서 사용할 변수명: = 태그프로퍼티명 
+						
+						// 값으로 참조.
+						// 디렉티브내부에서 사용할 변수명: @ 태그프로퍼티명
+						
+						// 함수를 전달할 목적으로 사용
+						// 디렉티브내부에서 사용할 함수명: & 태그프로퍼티명
+						
+						local: '=userName',
+						city: '@',
+						getCountry: '&'
+					}
+				}
+			})
+		.controller("scopeCtrl", function ($scope) {
+			$scope.data = { name: "Adam" };
+			$scope.city = 'Seoul';
+			
+			$scope.getCountry = function(value){
+				switch(value){
+				case 'Seoul':
+					return "KR";
+				case 'London':
+					return 'UK';
+				default:
+					return 'Unknow';
+				}
+			}
+		});
+	</script>
+</head>
+<body ng-controller="scopeCtrl">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			Data: <input ng-model="data.name" /><br>
+			City: <input ng-model="city" /><br>
+
+			{{getCountry(city)}}
+		</div>
+		<div class="panel-body" 
+			scope-demo
+			user-name = "data"
+			city="{{city}}"
+			get-country="getCountry(city)"
+			></div>
+		<!-- 함수는 전달하는 곳에서 매개변수의 값을 세팅해서 넘긴다.
+			따라서 지시자 내부에서는 이름 뒤에 함수호출 ()만 한다.
+			
+			만약 매개변수에서 사용할 값이 현재 controller 영역(scope)에 없고
+			지시자의 scope의 영역에 있는 경우는 전달하는 곳에서는 가상의 값으로
+			전달하고 지사자 내부에서 그 가상의 값을 실 사용 변수로 변경해서 사용
+		 -->
+	</div>
+</body>
+</html>
+
+
+
+
+

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Compile Function</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+    <link href="bootstrap.css" rel="stylesheet" />
+    <link href="bootstrap-theme.css" rel="stylesheet" />
+    <script type="text/ng-template" id="template">
+		<table class="table table-striped">
+        	<thead>
+        		<tr>
+        			<th>Name</th>
+					<th>category</th>
+        			<th>Price</th>
+        		</tr>
+        	</thead>
+        	<tbody>
+            	<tr ng-repeat="item in products">
+                	<td>{{item.name}}</td>
+					<td>{{item.category}}</td>
+                	<td>{{item.price | currency}}</td>
+            	</tr>
+        	</tbody>
+    	</table>
+		<div>
+			<input type="text" ng-model="product.name">
+            <input type="text" ng-model="product.category">
+            <input type="text" ng-model="product.price">
+			<button id="btn" ng-click="addItem( {item:product} )">Change</button>
+		</div>
+	</script>
+    <script type="text/javascript">
+        angular.module("exampleApp", [])
+            .controller("defaultCtrl", function ($scope) {
+            	$scope.products = [
+					{ name: "Apples", category: "Fruit", price: 1.20 },
+					{ name: "Bananas", category: "Fruit", price: 2.4 },
+					{ name: "Pears", category: "Fruit", price: 2.02},
+
+					{ name: "Tuna", category: "Fish", price: 20.45 },
+					{ name: "Salmon", category: "Fish", price: 17.93 },
+					{ name: "Trout", category: "Fish", price: 12.93},
+				];
+            	
+            	$scope.addProduct = function(product){
+            		if(angular.isDefined(product)){
+            			$scope.products.push(product);
+            			$scope.product = {};
+            		}
+            	}
+            })
+            
+            
+            .directive("simpleRepeater", function () {
+                return {
+                    restrict: 'AE',
+                    template: function(){
+                    	 return angular.element(document.querySelector('#template')).html();
+                    },
+                    scope: {
+                    	// 상위 controller 스코프의 변수를 하위 지시자에서 사용하도록 연결
+                    	products: '=',
+                    	addItem : '&addProduct',
+                    	// 자식 스코프의 변수 product를 상위 controller 스코프로 연결
+                    	product : '='
+                    }
+                }
+            });
+    </script>
+</head>
+<body ng-controller="defaultCtrl" class="panel panel-body" >
+
+	<!-- addProduct(?) 매개변수 ?는 현재 controller의 scope에 없음.
+		실질적으로 입력될 값은 지시자 simpleRepeater에 존재하므로
+		가상의 이름으로 전달하고, 사용하는 지시자에서 사용할 값으로 치환해서 사용.
+		값이 입력후 남아있게 되고 그 값을 변경하면 테이블의 값도 변경됨(에러)
+	  -->
+    <div simple-repeater 
+    	products="products"
+    	add-product="addProduct(item)"
+    	product="product">
+    	</div>
+    
+</body>
+</html>
+
+
+
+

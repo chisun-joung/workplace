@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Module</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var demo = angular.module('demo',[]);
+		demo.config([function(){
+			console.log('demo config')
+		}])
+		demo.run([function(){
+			console.log('demo run')
+		}])
+		demo.filter('demoFilter', [function(){
+			console.log('DemoFilter contructor')
+			return function(data){
+				console.log("DemoFilter Worker")
+				return data;
+			}
+		}])
+		demo.directive('demoTag', [function(){
+			console.log('demoTag constructor')
+			return function(scope,element, attr, ctrl) {
+				console.log('demoTag Link function')
+				element.css('color','orange');
+			}
+		}])
+		demo.factory('demoFactory',[function(){
+			return{
+				name: "honggildong"
+			}
+		}])
+		demo.controller('demoCtrl',['$scope', function($scope){
+			$scope.address = 'Seoul'
+		}])
+		
+		
+		var app = angular.module('app', ['demo']);
+		app.config([function(){
+			console.log('app config')
+		}])
+		app.run([function(){
+			console.log('app run')
+		}])
+		
+		app.controller('mainCtrl', ['$scope', function ($scope) {
+			
+		}])
+	</script>
+</head>
+<body ng-controller="mainCtrl">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service
+				<span class="label label-primary">Module</span>
+			</h3>
+		</div>
+
+		<div class="panel-body"></div>
+	</div>
+	
+</body>
+</html>

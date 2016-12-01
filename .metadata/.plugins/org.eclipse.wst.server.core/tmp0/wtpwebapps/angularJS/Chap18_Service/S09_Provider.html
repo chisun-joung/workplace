@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Provider</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var demo = angular.module('demo', []);
+		// 1. 이름 마지막에 provider를 붙이지 않는 것이 좋다.(붙여도 상관없음)
+		// 		config에서 직접 참조 가능. 이때 프로바이더의 이름에 반드시
+		//		nameProvider와 같이 "Provider"를 붙여 참조해야 한다
+		// 2. 사용하는 모듈의 config에서 직접 참조 가능. 참조 가능 영역이 정해져 있다.
+		// 3. 작성 영역에 $get을 반드시 기술해야 한다
+		//		이 $get 영역은 factory 내부와 동일한 형태로 기술한다.
+		
+		demo.provider('dp', [function(){
+			// 이 프로바이더에서 공통적으로 사용할 변수 선언 및 초기화
+			var name = 'Hong';
+			var jumsu = [10,20,30,0,0];
+			
+			// 실질 실행 영역. 
+			return {
+				// config에서 접근 할 수 있는 영역.
+				// $get을 정의해야 한다. 이 $get 영역 내부는 config에서 참조 불가
+				setName: function(userName){
+					name = userName;
+				},
+				setKor: function(kor){
+					jumsu[0] = kor;
+				},
+				setEng: function(eng){
+					jumsu[1] = eng;
+				},
+				
+				$get: ['$filter', function($filter){
+					// 에러 유도를 위해 기술한 함수
+					var setMath = function(math){
+						jumsu[2] = math;
+					}
+					
+					// factory와 같이 기술할 영역. 실질 기능 기술 영역
+					var getKor = function(){
+						return jumsu[0];
+					}
+					var getTotal = function(){
+						jumsu[3] = jumsu[0] + jumsu[1] + jumsu[2];
+						return jumsu[3];
+					}
+					var getAvg = function(){
+						jumsu[4] = jumsu[3] / 3;
+						return $filter('number')(jumsu[4], 2);
+					}
+					
+					// 위에서 선언한 변수, 함수 중 공개할 것만 정의.
+					return {
+						// 앞의 키값이 공개할 이름, value 값이 정의한 변수 또는 함수
+						name : name,
+						kor : getKor,
+						total : getTotal,
+						avg: getAvg
+					}
+				}]
+			}
+		}]);
+	
+		var app = angular.module('app', ['demo']);
+		app.config(['dpProvider', function(dpProvider){
+			dpProvider.setName('일지매');
+			dpProvider.setKor(90);
+			dpProvider.setEng(80);
+			//dpProvider.setMath(50);
+		}]);
+		
+		// 이름 그대로 호출해서 사용.
+		app.controller('mainCtrl', ['$scope','dp', 
+		                            function ($scope,dp) {
+			$scope.name = dp.name;
+			$scope.kor = dp.kor();
+			$scope.total = dp.total();
+			$scope.avg = dp.avg();
+		}])
+	</script>
+</head>
+<body>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service
+				<span class="label label-primary">Provider</span>
+			</h3>
+		</div>
+
+
+		<div class="panel-body" ng-controller="mainCtrl">
+			<div>Name: {{name}}</div>
+			<div>Jumsu kor: {{kor}}, Total: {{total}}, Avg: {{avg}}</div>
+			<div></div>
+		</div>
+	</div>
+	
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<!-- 앵귤가 관리할 요소의 범위를 설정한다. 
+앵귤라는 관리할 요소를 돔으로 보지 않고 템플릿으로 취급
+탬플릿의 모든 지시자, 서비스 등을 컴파일 한 후 결과를 돔으로 만들어 브라우저에 전송.  -->
+<html ng-app>
+<head>
+	<meta charset="UTF-8">
+	<title>A02 Controller</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script type="text/javascript">
+		//1.2 에서 가능.   1.3 부터는 모듈 단위로 .. 
+		function MyClass() {
+			this.qty = 3;
+			this.cost = 5;
+			
+			this.inCurr ='USD';
+			this.currencies = ['USD','EUR','CNY'];
+			this.rate = {'USD': 1, 'EUR': 1.23, 'CNY':6.87};
+			
+			
+			this.total = function(outCurr){
+				return this.convertRate(this.qty * this.cost, outCurr, this.inCurr);
+			}	
+			
+			this.convertRate = function(amount, outCurr, inCurr){
+				return amount * this.rate[outCurr] / this.rate[inCurr];
+			}
+			
+			this.pay = function() {
+				console.log("Clicked");
+			}
+		}
+	</script>
+</head>
+<body>
+
+	<!-- 각 태그마다 사용할 컨트롤러(클래스 파일)을 지정 
+	Class 파일은 객체화 하여 사용 
+	  var mc = new MyClass();   MyClass as mc
+	-->
+	<div class="panel-default" ng-controller="MyClass as mc">
+		<div class="panel-heading">
+			<h3>Invoice</h3>
+		</div>
+
+		<div class="panel-body col-sm-5">
+			<div>Quantity: </div>
+			<input type="number" class="form-control" min="0" ng-model="mc.qty">
+		</div>
+
+		<div class="form-inline panel-body">
+			<div>Cost: </div>
+			<div class="form-group">
+				<input type="number" id="cost" class="form-control" min="0" ng-model="mc.cost">
+			</div>
+			<div class="form-group">
+				<select class="form-control" ng-model="mc.inCurr">
+				<!-- option tag 가 내부적으로 3개 만들어 지면서 내부적으로 c라는 변수를 갖게 된다.  차일드스코프 -->
+					<option ng-repeat="c in mc.currencies">{{c}}</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="well">
+			<b>Total: {{mc.total('EUR')}} </b>
+			<span> </span> 
+			<button class="btn btn-primary" ng-click="mc.pay()">Pay</button>
+		</div>
+		
+	</div>
+
+</body>
+</html>

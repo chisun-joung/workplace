@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>TODO</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<style>
+		.odd { background-color: lightcoral; }
+		.even { background-color: lavenderblush; }
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl', ['$scope',function($scope){
+			$scope.todos = [
+				{action:'Get groceries', complate:false},
+				{action:'Call plumber', complate:false},
+				{action:'Buy running shose', complate:true},
+				{action:'Buy flowers', complate:false},
+				{action:'Call family', complate:false}
+			]
+		}]);
+	</script>
+</head>
+<body>
+	<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+		<h3 class="panel-header">To Do List</h3>
+		
+		<div class="well">
+			<div>The first item is: </div>
+		</div>
+
+		<div class="form-group well">
+			<label for="firstItem">Set First Item: </label>
+			<!-- ng-model은 form 요소에서 구현할 수 있다.
+				ng-model은 자신이 속한 controller에 묵시적으로 지정한 이름의
+				변수를 선언하고 값은 사용자가 입력한 값을 변수의 값으로 할당한다.
+				또한 양 방향 바인딩도 지원한다.
+			 -->
+			<input name="firstItem" class="form-control" ng-model="name"><br>
+			<input name="firstItem" class="form-control" ng-model="name"><br>
+			<div>{{name}}</div>
+		</div>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Action</th>
+					<th>Done</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in todos">
+					<td>{{item.action}}</td>
+					<td>{{item.complate}}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Action</th>
+					<th>Done</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in todos">
+					<!-- item => {action:'Get groceries', complate:false} -->
+					<td ng-repeat="value in item">{{value}}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Action</th>
+					<th>Done</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in todos">
+					<!-- item => {action:'Get groceries', complate:false} -->
+					<td ng-repeat="(key, value) in item">{{key}} - {{value}}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<!-- ng-repeat의 내부 변수. 이름이 다 정해져 있음 -->
+		<table class="table">
+			<thead>
+				<tr>
+					<th>NO</th>
+					<th>Action</th>
+					<th>Done</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in todos">
+					<td>{{$index + 1}}</td>
+					<!-- item => {action:'Get groceries', complate:false} -->
+					<td ng-repeat="value in item">{{value}}</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<!-- 285 page. ng-repeat의 내부 변수 -->
+		<table class="table table-striped">
+			<tr>
+				<td>value</td>
+				<td>$index(순서)</td>
+				<td>$first(처음이니?)</td>
+				<td>$middle(중간요소니?)</td>
+				<td>$last(마지막 요소?)</td>
+				<td>$odd(홀수번째?)</td>
+				<td>$even(짝수번째?)</td>
+			</tr>
+			<tr ng-repeat="item in todos">
+				<td>{{item.action}}</td>
+				<td>{{$index}}</td>
+				<td>{{$first}}</td>
+				<td>{{$middle}}</td>
+				<td>{{$last}}</td>
+				<td>{{$odd}}</td>
+				<td>{{$even}}</td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+

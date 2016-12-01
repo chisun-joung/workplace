@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Custom Filter</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+	
+		var demo = angular.module('demo', []);
+		demo.filter('ox', [function(){
+			
+			var map = {0: 'X', 1 : 'O'}
+			
+			return function(data){
+				if(angular.isDefined(data) && angular.isNumber(data)){
+					if(angular.equals(data, 0) || angular.equals(data, 1)){
+						return map[data];
+					}else{
+						return data;
+					}
+				}else{
+					return data;
+				}
+				
+			}
+		}]);
+		
+		demo.filter('abbr', [function(){
+			return function(data, size, symbol){
+				// 사용자가 옵션을 지정하지 않으면 기본값으로 사용하기 위해 설정
+				var size = size || 20;
+				var symbol = symbol || '...';
+				
+				if(angular.isDefined(data) && angular.isString(data)){
+					if(data.length < size){
+						return data;
+					}else{
+						return data.substring(0, size - symbol.length) + symbol;
+					}
+				}else{
+					return data;
+				}
+			}
+		}]);
+		
+		
+		demo.filter('percent', ['$filter', function($filter){
+			return function(data, size, symbol){
+				var size = size || 2;
+				var symbol = symbol || '%';
+				
+				if(angular.isDefined(data)){
+					// $filter를 스크립트 내부에서 사용하는 방식
+					//$filter('필터명(사용자정의필터 포함)')(변경할값, 옵션);
+					return $filter('number')(data * 100, size) + symbol;
+				}else{
+					return data;
+				}
+			}
+		}]);
+		
+		
+		demo.filter('regExp', [function(){
+			return function(data, field, pattern){
+				var field = field || '';
+				var pattern = pattern || '';
+				
+				var returnItem = [];
+				
+				var exp = new RegExp(pattern);
+				
+				if(angular.isDefined(data) && angular.isArray(data)){
+					for(var i = 0; i < data.length; i++){
+						// 정규표현식중 test(value)는 해당 value가 
+						// 정의한 표현식과 매칭되면 true를 아니면 false를 리턴
+						if(exp.test( data[i][field] )){
+							returnItem.push(data[i])
+						}
+					}
+					
+					return returnItem;
+				}else{
+					return data;
+				}
+			}
+		}]);
+		
+		
+		
+		
+		
+		var app = angular.module('app', ['demo']);
+		app.controller("defaultCtrl", function ($scope) {
+			$scope.products = [
+				{ name: "Apples", category: "Fruit", price: 1.20, expiry: 10 },
+				{ name: "Bananas", category: "Fruit", price: 2.42, expiry: 7 },
+				{ name: "Pears", category: "Fruit", price: 2.02, expiry: 6 },
+
+				{ name: "Tuna", category: "Fish", price: 20.45, expiry: 3 },
+				{ name: "Salmon", category: "Fish", price: 17.93, expiry: 2 },
+				{ name: "Trout", category: "Fish", price: 12.93, expiry: 4 },
+
+				{ name: "Beer", category: "Drinks", price: 2.99, expiry: 365 },
+				{ name: "Wine", category: "Drinks", price: 8.99, expiry: 365 },
+				{ name: "Whiskey", category: "Drinks", price: 45.99, expiry: 365 }
+			];
+			
+		});
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+
+	<div class="panel-header well">
+		<h3>Custom Filter</h3>
+	</div>
+		
+	<div class="panel-body">
+		<div>0: {{0 | ox}}</div>
+		<div>1: {{1 | ox}}</div>
+		<div>2: {{2 | ox}}</div>
+		<div>{{'동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세' | abbr }}</div>
+		<div>{{'동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세' | abbr : 10 : '***' }}</div>
+		<div>{{0.12345 | percent }}</div>
+		<div>{{0.12345 | percent : 1 }}</div>
+		
+		<div>
+			<ul>
+				<li ng-repeat="item in products | regExp : 'name' : 'n' ">{{item.name}}</li>
+			</ul>
+		</div>
+	</div>
+	
+</body>
+</html>

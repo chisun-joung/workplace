@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>TODO</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<style>
+		.odd { background-color: lightcoral; }
+		.even { background-color: lavenderblush; }
+	</style>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl', ['$scope',function($scope){
+			$scope.title = 'TODO';
+			$scope.todos = [
+				{action:'Get groceries', complate:false},
+				{action:'Call plumber', complate:false},
+				{action:'Buy running shose', complate:true},
+				{action:'Buy flowers', complate:false},
+				{action:'Call family', complate:false}
+			]
+		}]);
+	</script>
+</head>
+<body>
+	<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+		<h3 class="panel-header">To Do List</h3>
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Action</th>
+					<th>IF</th>
+					<th>Show</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="item in todos" ng-class="$odd ? 'odd' : 'even'">
+					<td>{{$index + 1}}</td>
+					<td>{{item.action}}</td>
+					<!-- ng-if => true 면 요소 자체를 생성(돔에 있음)
+						 false면 요소 자체를 삭제(dom에 없음) -->
+					<td><span ng-if="item.complate">{{item.complate}}</span></td>
+					<td><span ng-hide="item.complate">{{item.complate}}</span></td>
+				</tr>
+			</tbody>
+		</table>
+
+		<table class="table">
+			<tbody>
+				<tr ng-repeat-start="item in todos">
+					<td>This is {{$index + 1}} item </td>
+				</tr>
+				<tr>
+					<td>This action is {{item.action}}</td>
+				</tr>
+				<tr ng-repeat-end>
+					<td>Item  is {{item.complate ? '' : 'not'}} complate</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+</body>
+</html>

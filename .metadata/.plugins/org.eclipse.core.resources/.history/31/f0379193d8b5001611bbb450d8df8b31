@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Controllers</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+	<script>
+		
+		var app = angular.module('exampleApp', []);
+		app.controller('simpleCtrl', function($scope){
+			$scope.clickCounter = 0;
+			
+		})
+		
+	</script>
+</head>
+<body>
+	<div id="angularRegion" class="well" ng-controller="simpleCtrl">            
+		<h4>AngularJS</h4>
+		<div class="checkbox">
+			<button>Click Me!</button>
+		</div>
+		Click counter: 
+	</div>
+	<div class="well">
+		<h4>jQuery UI</h4>
+		<button id="btn">Click Me!</button>
+	</div>
+</body>
+</html>

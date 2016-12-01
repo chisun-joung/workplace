@@ -1,0 +1,86 @@
+<html ng-app="exampleApp">
+<head>
+	<title>Directives</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		var demo = angular.module('demo',[]);
+		demo.directive('demoTest', [function(){
+			return function(scope, element, attrs, ctrl){
+				element.css('color', 'orange');
+			}
+		}]);
+		
+		demo.directive('unorderedList', [function(){
+			return function(scope,element,attrs){
+				scope.data = scope[attrs['unorderedList']];
+				var prop = attrs['listProperty'];
+				
+				var ul = angular.element('<ul>');
+				
+				for(var i = 0; i < scope.data.length; i++){
+					var li = angular.element('<li>');
+					li.text(scope.$eval(prop, scope.data[i]));
+					ul.append(li);
+					
+					
+					// 감시자 등록
+					// 감시자는 모든 요소와 변수가 다 등록되어야 감시할 대상을
+					// 등록할 수 있다.
+					// 따라서 모든 요소와 변수가 등록되고 난 후에 $watch 함수가
+					// 등록된다
+					scope.$watch('data', function(nv){
+						// 아래의 nv는 정상적으로 새로운 값을 가져옴
+						//console.log(nv);
+						
+						//여기서 에러가 발생. i의 값을 꼭 확인
+						// $watch가 등록되는 시점(요소가 다 만들어진 시점)에 i는
+						// for문의 반복이 다 끝난 시점이라 i는 3의 값을 갖는다
+						console.log(i);
+						//li.text(scope.$eval(prop, nv[i])); => 에러
+						li.text(scope.$eval(prop, nv[0]));
+					}, true)
+				}
+				element.append(ul)
+			}
+		}])
+	
+		var app = angular.module("exampleApp", ['demo']);
+		app.controller("defaultCtrl", function ($scope) {
+			$scope.products = [
+				{ name: "Apples", category: "Fruit", price: 1.20, expiry: 10 },
+				{ name: "Bananas", category: "Fruit", price: 2.42, expiry: 7 },
+				{ name: "Pears", category: "Fruit", price: 2.02, expiry: 6 }
+			];
+			
+			$scope.plus = function(){
+				for(var i = 0; i < $scope.products.length; i++){
+					$scope.products[i].price++;
+					//console.log($scope.products[i].price);
+				}
+			}
+		});
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 demo-test full-name='홍길동'>Products</h3>
+		</div>
+		
+		<div class="panel-body" >
+			<button ng-click="plus()">PLUS</button>
+		</div>
+		
+		<div class="panel-body" 
+				unordered-list="products"
+				list-property = "price | currency">
+			Content will go here.
+		</div>
+		
+		
+		
+	</div>
+</body>
+</html>

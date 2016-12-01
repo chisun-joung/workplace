@@ -1,0 +1,79 @@
+<html ng-app="exampleApp">
+<head>
+	<title>Directives</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		var demo = angular.module('demo',[]);
+		demo.directive('demoTest', [function(){
+			/* return {
+				// 사용자 정의 지시자의 옵션들이 기술되는 곳
+			} */
+			
+			// link 함수만 독립적으로 사용할 수 있다.
+			// 이벤트의 등록이나, 변수를 감시할($watch) 목적으로 사용.
+			// 묵시적으로 4개의 매개변수를 할당 받는다.
+			return function(scope, element, attrs, ctrl){
+				// scope => 자신이 속한 controller의 scope 영역
+				// element => 태그(demoTest) 기술된 태그
+				// attrs => 태그에 기술된 다른 속성 참조.
+				//		이 사용자 정의 지시자가 태그로 사용되면 속성으로 작동 안함
+				//		이 사용자 정의 지시자가 속성로 사용되면 태그 역할을 하면서 속성으로도 동작함
+				//		<div ng-include="'aa.html'"> => 속성형태로 사용
+				//		<ng-include src="'aa.html'"></div>
+				// ctrl => 상위 사용자 지시자 또는 내장 지시자의 controller에 대한 참조
+				console.log(scope);
+				console.log(element);	// div 태그를 jquery 객체로 변환해서 돌려줌
+				console.log(attrs);
+				console.log(ctrl);
+				
+				element.css('color', 'orange');
+			}
+		}]);
+		
+		demo.directive('unorderedList', [function(){
+			return function(scope,element,attrs){
+				// angular.element(요소) => 해당 요소를 jQuery 객체로 변경
+				// var ul = $('<ul></ul>')
+				var ul = angular.element('<ul>');
+				
+				for(var i = 0; i < scope.products.length; i++){
+					var li = angular.element('<li>');
+					li.text(scope.products[i].name);
+					//li.css('color', 'lightgreen');
+					ul.append(li);
+				}
+				element.append(ul)
+			}
+		}])
+	
+		var app = angular.module("exampleApp", ['demo']);
+		app.controller("defaultCtrl", function ($scope) {
+			$scope.products = [
+				{ name: "Apples", category: "Fruit", price: 1.20, expiry: 10 },
+				{ name: "Bananas", category: "Fruit", price: 2.42, expiry: 7 },
+				{ name: "Pears", category: "Fruit", price: 2.02, expiry: 6 }
+			];
+		});
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3 demo-test full-name='홍길동'>Products</h3>
+		</div>
+		
+		<!-- 사용자 정의 지시자에 대문자가 포함되면 대문자를 소문자로 변경하고
+			그 앞에 -로 연결해서 사용한다.
+			옵션도 동일한 규칙을 갖는다.	
+		 -->
+		<div class="panel-body" unordered-list>
+			Content will go here.
+		</div>
+		
+		
+		
+	</div>
+</body>
+</html>

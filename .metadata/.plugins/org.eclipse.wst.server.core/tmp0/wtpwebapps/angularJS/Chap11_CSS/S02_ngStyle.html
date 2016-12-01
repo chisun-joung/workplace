@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>ngStyle</title>
+	<style type="text/css">
+		.blue { background-clor: blue; }
+	</style>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('app', []);
+		app.controller('mainCtrl', ['$scope', function($scope){
+			$scope.value = {color: 'blue', fontWeight: 'bold'};
+
+		}]);
+	</script>
+</head>
+<body ng-controller="mainCtrl">
+	
+	<div class="panel">
+
+		<div class="panel-body well">
+			<h3>ngStryle</h3>
+		</div>
+
+		<div class="panel-body">
+			<div>Value: </div>
+			<div>Color: </div>
+			<div>직접 적용: <span>ngStyle</span></div>
+			<div>변수 이용: <span>ngStyle</span></div>
+		</div>
+
+		<div class="panel-body">
+			<button class="btn btn-default">Set Color</button>
+			<button class="btn btn-default">Set BackGround</button>
+			<button class="btn btn-default">Set Text</button>
+			<button class="btn btn-default">Reset</button>
+		</div>
+	</div>
+	
+	
+</body>
+</html>

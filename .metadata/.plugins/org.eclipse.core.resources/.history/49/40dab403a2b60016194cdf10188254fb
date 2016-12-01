@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Provider</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var demo = angular.module('demo',[]);
+		demo.provider('dp', [function(){
+			var name = 'Hong';
+			var jumsu = [10,20,30,0,0];
+			
+			return {
+				setName: function(userName){
+					name = userName;
+				},
+				setKor: function(kor){
+					jumsu[0] = kor;
+				},
+				setEng: function(eng){
+					jumsu[1] = eng;
+				},
+				
+				$get: ['$filter', function($filter){
+					var getKor = function(){
+						return jumsu[0];
+					}
+					var getTotal = function(){
+						jumsu[3] = jumsu[0] + jumsu[1] + jumsu[2];
+						return jumsu[3];
+					}
+					var getAvg = function(){
+						jumsu[4] = jumsu[3] /3 ;
+						return jumsu[4];
+					}
+					return {
+						name : name,
+						getKor : getKor,
+						getAvg : getAvg,
+						getTotal : getTotal
+					}
+				}]
+			}
+		}])
+	
+		var app = angular.module('app', ['demo']);
+		app.config(['dpProvider', function(dpProvider){
+			dpProvider.setName('일지매');
+			dpProvider.setKor(90);
+			dpProvider.setEng(80);
+		}])
+		app.controller('mainCtrl', ['$scope','dp', function ($scope, dp) {
+			$scope.name = dp.name;
+			$scope.kor = dp.getKor();
+			$scope.total = dp.getTotal();
+			$scope.avg = dp.getAvg();
+		}])
+	</script>
+</head>
+<body>
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service
+				<span class="label label-primary">Provider</span>
+			</h3>
+		</div>
+
+
+		<div class="panel-body" ng-controller="mainCtrl">
+			<div>{{name}}</div>
+			<div>{{kor}}</div>
+			<div>{{total}}</div>
+		</div>
+	</div>
+	
+</body>
+</html>

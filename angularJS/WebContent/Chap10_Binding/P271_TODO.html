@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>TODO</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	
+</head>
+<body ng-controller="defaultCtrl">
+	<div id="todoPanel" class="panel panel-default">
+		<h3 class="panel-header">To Do List</h3>
+		
+		<!-- angular가 올라오기 전까지는 문자열 형태로 표시됨 -->
+		<div>There are {{todos.length}} items</div>
+		
+		<!-- angular가 올라오기 전까지는 모르는 옵션으로 무시됨. -->
+		<div>There are <span data-ng-bind="todos.length"></span> items</div>
+		
+		<!-- class로 사용 -->
+		<div>There are <span class="ng-bind: todos.length"></span> items</div>
+		
+		<!-- 바인딩을 연결해서 사용 -->
+		<div>First item value is {{todos[0].action}} and {{todos[0].complate}}</div>
+		
+		<!-- tag 내부에서 사용 -->
+		<div ng-bind-template="First item value is {{todos[0].action}} and {{todos[0].complate}}"></div>
+		
+		<!-- {{}}를 바인딩 식이 아닌 텍스트 형태로 표시하고자 할 경우 -->
+		<div ng-non-bindable>Item is action {{and}} complate</div>
+	</div>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script type="text/javascript">
+		angular.module('exampleApp',[])
+		.controller('defaultCtrl', ['$scope',function($scope){
+			$scope.todos = [
+				{action:'Get groceries', complate:false},
+				{action:'Call plumber', complate:false},
+				{action:'Buy running shose', complate:true},
+				{action:'Buy flowers', complate:false},
+				{action:'Call family', complate:false}
+			]
+		}]);
+	</script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script>
+	var memoAry = [];
+
+	
+	var insertMemoToDOM = function(memoObj) {
+		var tbody = document.getElementById('tbody');
+		var tr = document.createElement('tr');
+		var td = document.createElement('td');
+		//var td_memo = document.createElement('td');
+		td.innerHTML = memoObj.date;
+		tr.appendChild(td);
+		//td_memo.innerHTML = memoObj.memo;
+		td.innerHTML = memoObj.memo;
+		tr.appendChild(td);
+		//tr.appendChild(td_date);
+		//tr.appendChild(td_memo);
+		tbody.appendChild(tr);
+	}
+	
+	var saveMemo = function() {
+		var memo = document.getElementById('memo').value;
+		var date = new Date();
+		date = date.toISOString();
+
+		var memoObj = {
+			'date' : date,
+			'memo' : memo
+		}
+		memoAry.push(memoObj);
+		insertMemoToDOM(memoObj);
+		document.getElementById('memo').value = '';
+	}
+	
+	
+	
+</script>
+</head>
+<body>
+	<div>
+		<h1>심플 메모</h1>
+		<h3>메모를 입력 하세요</h3>
+		<input id='memo' type='text' name='memo' />
+		<button onclick='saveMemo()'>저장</button>
+		<table>
+			<thead>
+				<tr>
+					<td>날짜</td>
+					<td>메모</td>
+				</tr>
+			</thead>
+			<tbody id="tbody">
+			</tbody>
+		</table>
+	</div>
+</body>
+</html>

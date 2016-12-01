@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>A07 Decorator</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var demo = angular.module('demo', []);
+		demo.value('user', {
+			firstName: 'Hong',
+			lastName: 'GilDong',
+			getName: function(){
+				return this.firstName + ' ' + this.lastName;
+			}
+		});
+		
+		demo.factory('demoFactory', ['$filter','user',function($filter,user){
+			var factoryName = 'Demo Factory';
+			var user = user;
+			var today = new Date();
+			
+			var getName = function(){
+				return user.firstName + ' ' + user.lastName;
+			}
+			var getToday = function(){
+				return $filter('date')(today, 'short');
+			}
+			return {
+				factoryName: factoryName,
+				getName: getName,
+				getToday: getToday,
+				user: user
+			}
+		}]);
+
+		var app = angular.module('app', ['demo']);
+		
+		app.config(['$provide', function($provide){
+			console.log($provide);
+			$provider.decorator('user',['$delegate', function($delegate){
+				console.log($delegate);
+				return $delegate;
+			}])
+		}])
+		
+		app.controller('mainCtrl', ['$scope','demoFactory',function($scope,demoFactory){
+			$scope.factory = demoFactory.factoryName;
+			$scope.getName = demoFactory.getName();
+			$scope.user = demoFactory.user;
+			$scope.today = demoFactory.getToday();
+		}])
+	</script>
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service
+				<span class="label label-primary">Decorator</span>
+			</h3>
+		</div>
+
+
+		<div class="panel-body" ng-controller="mainCtrl">
+			<div>Factory Name: {{factory}}</div>
+			<div>User: {{getName}}</div>
+			<div>Today: {{today}}</div>
+		</div>
+	</div>
+
+</body>
+</html>
+
+

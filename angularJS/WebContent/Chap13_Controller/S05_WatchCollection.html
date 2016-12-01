@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>A02 Module DI</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		app = angular.module('app', []);
+		app.controller('main', ['$scope', function($scope) {
+			$scope.items = ['JavaScript','AngularJS','jQuery'];
+			$scope.counter = '';
+			
+			$scope.addItem = function(item){
+				//check 구문 
+				if($scope.items.length < 5){
+					$scope.items.push(item);
+					$scope.item = '';
+				}
+				
+			}
+			
+			$scope.$watch('items.length', function(nv){
+				if(nv == 5){
+					$scope.counter = "5개까지만 입력이 가능합니다."
+				}
+			})
+			
+			$scope.$watch('items', function(nv){
+				console.log(nv);
+				$scope.value = nv.length + "번째 입력된 값은 " + nv[nv.length - 1];
+			}, true)
+		}]);
+		
+	</script>
+</head>
+
+<body ng-controller="main">
+	<div class="panel-header well">
+		<h3>$event</h3>
+	</div>
+		
+	<div class="form-inline panel-body">
+		<div class="form-group">
+			<input type="text" class="form-control" ng-model="item">
+		</div>
+		<div class="form-group">
+			<button class="btn btn-primary" ng-click="addItem(item)">ADD</button>
+		</div>
+	</div>
+	
+	<div class="panel-body">
+		<ul>
+			<li ng-repeat="item in items track by $index">{{item}}</li>
+		</ul>
+	</div>
+	
+	<div class="panel-body">
+		<span>{{counter}}</span>
+		<div>{{value}}</div>
+	</div>
+</body>
+</html>

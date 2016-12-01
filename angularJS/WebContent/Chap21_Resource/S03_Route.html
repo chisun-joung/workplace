@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Route</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-route.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<!-- Inline Templates (Partials) -->
+	<!-- Home -->
+	<script type=text/ng-template id=home.html>
+		<ul>
+			<li><a href="#/list">Show Items</a></li>
+			<li><a href="#/settings">Settings</a></li>
+		</ul>
+	</script>
+	<!-- List -->
+	<script type=text/ng-template id=list.html>
+		<p>Choose an Item</p>
+		<ul>
+			<li ng-repeat="item in items">
+				<a href="#/detail/{{item.id}}">{{item.title}}</a>
+			</li>
+		</ul>
+	</script>
+	<!-- Detail -->
+	<script type=text/ng-template id=detail.html>
+		<h2>{{item.title}}</h2>
+			<p>{{item.content}}</p>
+			<hr>
+		<p>{{item.id}}</p>
+	</script>
+	<!-- Settings -->
+	<script type=text/ng-template id=settings.html>
+		<p>Settings go here ...</p>
+	</script>
+
+	<script type="text/javascript">
+		var demo = angular.module('demo', ['ngRoute']);
+		demo.factory('model',[function(){
+			var data = [
+				{id:0, title:'Title 00', content: 'This is 00 Page'},
+				{id:1, title:'Title 01', content: 'This is 01 Page'},
+				{id:2, title:'Title 02', content: 'This is 02 Page'},
+				{id:3, title:'Title 03', content: 'This is 03 Page'},
+				{id:4, title:'Title 04', content: 'This is 04 Page'},
+				{id:5, title:'Title 05', content: 'This is 05 Page'},
+				{id:6, title:'Title 06', content: 'This is 06 Page'},
+			];
+			var getItem = function(){
+				return data;
+			}
+			var getID = function(id){
+				return data[id];
+			}
+			return {
+				getItem: getItem,
+				getID: getID
+			}
+		}])
+		
+		demo.factory('page', [function(){
+			var pageTitle = '';
+			var setTitle = function(title){
+				pageTitle = title;
+			}
+			var getTitle = function(){
+				return pageTitle;
+			}
+			return {
+				setTitle: setTitle,
+				getTitle: getTitle
+			}
+		}])
+		
+		demo.config(['$routeProvider',function($routeProvider){
+			
+		}])
+		
+		var app = angular.module('app', ['demo'])
+		app.controller('mainCtrl',['$scope','page', function($scope,page){
+			$scope.page = page;
+		}]);
+
+	</script>
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>{{page.getTitle()}}</h3>
+			<div>
+				<a href="#/home">Home</a> | 
+				<a href="#/list">List</a> | 
+				<a href="#/settings">Settings</a>
+			</div>
+		</div>
+
+		<div class="panel-body">
+			<ng-view></ng-view>
+		</div>
+	<div>
+
+</body>
+</html>

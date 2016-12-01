@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>A02 Module DI</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		app = angular.module('app', []);
+		app.controller('main', ['$scope', function($scope) {
+			$scope.one = 'Hello World!';
+			$scope.two = 'Hello World!';
+			$scope.three = 'Hello World!';
+			$scope.result = '';
+			
+			$scope.$watchGroup([
+				function(scope) {
+					if(scope.two == 'Hong') {
+						return 'HongGilDong'
+					} else {
+						return 'dont Know'
+					}
+				},
+				function(scope) {
+					if(scope.one >= 90) {
+						return 'Pass'
+					} else {
+						return 'Fail'
+					}
+				}
+			                    
+			], function(nv, ov, scope){
+			   console.log(nv)
+			})
+		}]);
+		
+	</script>
+</head>
+
+<body ng-controller="main">
+	<div class="panel-header well">
+		<h3>$watchGroup</h3>
+	</div>
+		
+	<div class="panel-body">
+		One: <input type="text" class="form-control" ng-model="one">
+		Two: <input type="text" class="form-control" ng-model="two">
+		Three: <input type="text" class="form-control" ng-model="three">
+	</div>
+	
+	<div class="panel-body">
+		<span>{{result}}</span>
+	</div>
+</body>
+</html>

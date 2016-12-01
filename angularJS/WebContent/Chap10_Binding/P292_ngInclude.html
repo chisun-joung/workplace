@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Directives</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+    <link href="bootstrap.css" rel="stylesheet" />
+    <link href="bootstrap-theme.css" rel="stylesheet" />
+    <script>
+        angular.module("exampleApp", [])
+            .controller("defaultCtrl", function ($scope) {
+                $scope.todos = [
+                    { action: "Get groceries", complete: false },
+                    { action: "Call plumber", complete: false },
+                    { action: "Buy running shoes", complete: true },
+                    { action: "Buy flowers", complete: false },
+                    { action: "Call family", complete: false }];
+                
+                $scope.showList = true;
+                
+                $scope.view = function(list){
+                	return (list) ? 'template/list.html' : 'template/table.html';
+                }
+            });
+    </script>
+</head>
+<body>
+    <div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+        <h3 class="panel-header">To Do List</h3>
+
+        <div class="well">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" ng-model="showList">
+                    Use the list view {{showList}}
+                </label>
+            </div>
+            
+            <ng-include src="view(showList)"></ng-include>
+            
+        </div>
+        
+        <!-- 속성으로 사용하면 지시자가 옵션 역할을 한다.
+        	기본적으로 값은 문자열이다. 문자열로 지정하지 않으면 변수로 취급.
+        	ajax를 이용해서 불러오므로 서버에서 실행해야 함.
+         -->
+        <div ng-include=" 'template/table.html' "></div>
+        
+        <!-- tab 형태로도 사용가능. tag로 사용하면 option역할을 하지 않는다.
+        	따라서 반드시 src 옵션을 이용해 불러올 파일을 지정해야 한다
+         -->
+         <data-ng-include src="'template/table.html'"></data-ng-include>
+
+    </div>
+</body>
+</html>

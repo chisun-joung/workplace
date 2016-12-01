@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>P296 JavaScript</title>
+
+<script type="text/javascript">
+	var Parent = function() {};
+	var Child = function() {};
+	
+	Parent.prototype.name = 'Hong';
+	Parent.prototype.user = {
+			age: 20,
+			address: 'Seoul'
+	}
+	
+	Child.prototype = new Parent();
+	
+	
+	var parent = new Parent();
+	var child = new Child();
+	
+	// 값 확인
+	console.log("변경 전");
+	console.log("변경 후" + parent.name);
+	console.log("변경 후" + parent.user.age);
+	console.log("변경 후" + parent.user.name);
+	console.log("변경 후" + child.name);
+	console.log("변경 후" + child.user.age);
+	console.log("변경 후" + child.user.name);
+	
+</script>
+</head>
+<body>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Compile Function</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+    <link href="bootstrap.css" rel="stylesheet" />
+    <link href="bootstrap-theme.css" rel="stylesheet" />
+    <script type="text/ng-template" id="template">
+		<table class="table table-striped">
+        	<thead>
+        		<tr>
+        			<th>Name</th>
+					<th>category</th>
+        			<th>Price</th>
+        		</tr>
+        	</thead>
+        	<tbody>
+            	<tr ng-repeat="item in products">
+                	<td>{{item.name}}</td>
+					<td>{{item.category}}</td>
+                	<td>{{item.price | currency}}</td>
+            	</tr>
+        	</tbody>
+    	</table>
+		<div>
+			<input type="text" ng-model="product.name">
+            <input type="text" ng-model="product.category">
+            <input type="text" ng-model="product.price">
+			<button id="btn" ng-click="addItem()">Change</button>
+		</div>
+	</script>
+    <script type="text/javascript">
+        angular.module("exampleApp", [])
+            .controller("defaultCtrl", function ($scope) {
+            	$scope.products = [
+					{ name: "Apples", category: "Fruit", price: 1.20 },
+					{ name: "Bananas", category: "Fruit", price: 2.4 },
+					{ name: "Pears", category: "Fruit", price: 2.02},
+
+					{ name: "Tuna", category: "Fish", price: 20.45 },
+					{ name: "Salmon", category: "Fish", price: 17.93 },
+					{ name: "Trout", category: "Fish", price: 12.93},
+				];
+            	
+            	$scope.addProduct = function(){
+            		if(angular.isDefined($scope.product)){
+            			$scope.products.push($scope.product);
+            			$scope.product = {};
+            		}
+            	}
+            })
+            .directive("simpleRepeater", function () {
+                return {
+                    restrict: 'AE',
+                    template: function(){
+                    	 return angular.element(document.querySelector('#template')).html();
+                    },
+                    scope: {
+                    	products:'=',
+                    	addItem:'&addProduct',
+                    	product:'='
+                    }
+                }
+            });
+    </script>
+</head>
+<body ng-controller="defaultCtrl" class="panel panel-body" >
+
+    <div simple-repeater products="products" add-product="addProduct()" product='product'></div>
+    
+</body>
+</html>

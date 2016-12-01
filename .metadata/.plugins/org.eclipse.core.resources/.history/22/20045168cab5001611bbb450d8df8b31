@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Controllers</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		angular.module("exampleApp", [])
+			.controller('simpleCtrl', function($scope){
+				$scope.cities = ['London', 'New York', 'Raris'];
+				$scope.city = 'London'
+				
+				$scope.getCountry = function(city){
+					switch(city){
+					case 'London':
+						return 'UK';
+					case 'New York':
+						return 'US'
+					}
+				}
+			})
+	</script>
+</head>
+<body>
+	<div class="well" ng-controller="simpleCtrl">
+		<div class="well">
+			<label>Select a City:</label>
+			<select></select>
+		</div>
+		<p>The City is {{city}}</p>
+		<p>The country is {{getCountry(city) || 'Unknow'}}</p>
+	</div>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Compile Function</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+    <link href="bootstrap.css" rel="stylesheet" />
+    <link href="bootstrap-theme.css" rel="stylesheet" />
+    <script type="text/ng-template" id="template">
+		<table class="table table-striped">
+        	<thead>
+        		<tr>
+        			<th>Name</th>
+					<th>category</th>
+        			<th>Price</th>
+        		</tr>
+        	</thead>
+        	<tbody>
+            	<tr ng-repeat="item in products">
+                	<td>{{item.name}}</td>
+					<td>{{item.category}}</td>
+                	<td>{{item.price | currency}}</td>
+            	</tr>
+        	</tbody>
+    	</table>
+		<div>
+			<input type="text" ng-model="product.name">
+            <input type="text" ng-model="product.category">
+            <input type="text" ng-model="product.price">
+			
+			<!-- 여기서는 호출만 하면 됨 -->
+			<button id="btn" ng-click="addItem()">Change</button>
+		</div>
+	</script>
+    <script type="text/javascript">
+        angular.module("exampleApp", [])
+            .controller("defaultCtrl", function ($scope) {
+            	$scope.products = [
+					{ name: "Apples", category: "Fruit", price: 1.20 },
+					{ name: "Bananas", category: "Fruit", price: 2.4 },
+					{ name: "Pears", category: "Fruit", price: 2.02},
+
+					{ name: "Tuna", category: "Fish", price: 20.45 },
+					{ name: "Salmon", category: "Fish", price: 17.93 },
+					{ name: "Trout", category: "Fish", price: 12.93},
+				];
+            	
+            	$scope.addProduct = function(product){
+            		if(angular.isDefined(product)){
+            			$scope.products.push(product);
+            			$scope.product = {};
+            		}
+            	}
+            })
+            
+            
+            .directive("simpleRepeater", function () {
+                return {
+                    restrict: 'AE',
+                    template: function(){
+                    	 return angular.element(document.querySelector('#template')).html();
+                    },
+                    scope: {
+                    	// 상위 controller 스코프의 변수를 하위 지시자에서 사용하도록 연결
+                    	products: '=',
+                    	addItem : '&addProduct',
+                    	// 자식 스코프의 변수 product를 상위 controller 스코프로 연결
+                    	product : '='
+                    }
+                }
+            });
+    </script>
+</head>
+<body ng-controller="defaultCtrl" class="panel panel-body" >
+
+	<!--
+		product라는 변수가 생겼으므로 직접 매개변수로 전달해도 문제 없음.
+	  -->
+    <div simple-repeater 
+    	products="products"
+    	add-product="addProduct(product)"
+    	product="product">이 텍스트는 보일까?
+    	</div>
+    
+</body>
+</html>

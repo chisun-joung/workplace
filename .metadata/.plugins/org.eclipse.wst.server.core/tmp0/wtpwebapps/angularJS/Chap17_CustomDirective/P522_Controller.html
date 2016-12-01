@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+    <title>Directive Controllers</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+    <link href="bootstrap.css" rel="stylesheet" />
+    <link href="bootstrap-theme.css" rel="stylesheet" />
+    <script type="text/ng-template" id="productTemplate">
+        <td>{{item.name}}</td>
+        <td><input ng-model='item.quantity' /></td>
+    </script>
+    <script>
+        angular.module("exampleApp", [])
+        .controller("defaultCtrl", function ($scope) {
+            $scope.products = [
+                { name: "Apples", price: 1.20, quantity: 2 },
+                { name: "Bananas", price: 2.42, quantity: 3 },
+                { name: "Pears", price: 2.02, quantity: 1 }];
+        })
+        
+        .directive("productTable", function () {
+            return {
+                scope: { 
+                	value: "=productTable", 
+                	data: "=productData" 
+                },
+                
+                controller: function($scope,$element,$attrs){
+                	this.name = 'HongGilDong';
+                	this.update = function(){
+                		var total = 0;
+                		for(var i=0; i < $scope.data.length; i++){
+                			total = total + Number($scope.data[i].quantity);
+                		}
+                		$scope.value = total;
+                	}
+                	
+                	//$scope.update();
+                },
+                compile: function(element,attrs,transFn){
+                	var btn = angular.element('<button>');
+                	btn.text('PLUS');
+                	btn.addClass('btn btn-primary');
+                	element.parent().append(btn);
+                	
+                	// controller에서 this로 정의된 변수, 함수는 ctrl을 이용해
+                	// 참조가 가능하다.
+                	return function(scope,element,attrs,ctrl){
+                		console.log(scope);
+                		
+                		btn.on('click', function(){
+                			ctrl.update();
+                			scope.$apply();
+                		})
+                	}
+                }
+                
+            }
+        })
+        
+        .directive("productItem", function () {
+            return {
+                template: document.querySelector("#productTemplate").outerText,
+                
+                // 어떤 지시자의 controller를 참조 할 것인가를 지정.
+                require: '^productTable',
+                link: function(scope,element,attrs,ctrl){
+                	scope.$watch('item.quantity', function(nv){
+                		ctrl.update();
+                	});
+                }
+                
+            }
+        });
+    </script>
+</head>
+<body ng-controller="defaultCtrl">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <table class="table table-striped" 
+            	product-table="totalValue" 
+            	product-data="products">
+                <tr>
+                	<th>Name</th>
+                	<th>Quantity</th>
+                </tr>
+                <tr ng-repeat="item in products" product-item></tr>
+                <tr>
+                	<th>Total:</th>
+                	<td>{{totalValue}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

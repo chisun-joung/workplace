@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+<!-- 선언한 많은 모듈 중어떤 모듈을 메인 모듈로 사용할 것인가를 지정할 필요가 있다 -->
+<html data-ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>A02 Controller</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.js"></script>
+	<script type="text/javascript">
+		var demo = angular.module('demo', []);
+		demo.config(function(){
+			console.log("config")
+		})
+		demo.run(function(){
+			console.log("run")
+		})
+		// 사용자 정의 필터
+		demo.filter('demoFilter', function(){
+			console.log("필터 생성자")
+			return function(data){
+				console.log("필터 작업자")
+				return data.toUpperCase();
+			}
+		})
+		// 사용자 정의 디렉티브
+		demo.directive('demoTag', function(){
+			console.log("디렉티브 생성자")
+			return function(scope,element,attrs){
+				console.log("디렉티브 링크함수")
+				var btn = angular.element('<button>');
+				btn.text('Button');
+				btn.addClass('btn btn-primary')
+				element.append(btn);
+			}
+		})
+		// 사용자 정의 서비스
+		// $scope 서비스 의존을 못 받음.
+		demo.factory('demoFactory', function(){
+			console.log("서비스 팩토리 함수")
+			var currencies = ['USD', 'EUR', 'CNY'];
+			var rate = {'USD': 1, 'EUR': 1.23, 'CNY':6.87};
+			
+			var convertRate = function(amount,outCurr,inCurr){
+				return amount * rate[outCurr] / rate[inCurr];
+			}
+			
+			// 위에 선언한 변수, 함수 중 공개 할 항목만 객체형으로 리턴
+			return {
+				// 공개할 이름: var 선언 변수 또는 함수명
+				curr: currencies,
+				rate: rate,
+				convertRate: convertRate
+			}
+			
+		})
+		
+		// 사용할 메인 모듈을 선언
+		// angular.module('모둘명', ['의존성주입을 받을 다른 모듈명'])
+		angular.module('app', ['demo'])
+			.config(function(){
+				console.log("app Config")
+			})
+			.run(function(){
+				console.log("app run")
+			})
+			
+			// 서비스는 컨트럴러에서 사용할 서비스명을 반드시 기술해야 한다.
+			.controller('defaultCtrl', function($scope, demoFactory){
+				$scope.qty = 3;
+				$scope.cost = 5;
+				
+				$scope.inCurr = 'EUR';
+				
+				// 사용자 정의 서비스의 값을 view에서 사용할 수 있도록 연결 작업.
+				$scope.currencies = demoFactory.curr;
+				$scope.rate = demoFactory.rate;
+				
+				$scope.total = function(outCurr){
+					//return $scope.qty * $scope.cost * 
+					//		$scope.rate[outCurr] / $scope.rate[$scope.inCurr];
+					return demoFactory.convertRate($scope.qty*$scope.cost, outCurr, $scope.inCurr);
+				}
+				
+				$scope.pay = function(){
+					alert('Thank You!!!')
+				}
+			})
+	
+	</script>
+</head>
+<body>
+
+	<!-- 각 태그마다 사용할 컨트럴러(Class 파일)을 지정
+		Class 파일은 인스턴스로 사용.
+		var mc = new MyClass() => MyClass as mc
+	 -->
+	<div class="panel-default" ng-controller="defaultCtrl">
+		<div class="panel-heading">
+			<h3>{{ 'Invoice' | demoFilter }}</h3>
+		</div>
+
+		<div class="panel-body col-sm-5">
+			<div>{{ 'Quantity' | demoFilter}} : </div>
+			<input type="number" class="form-control" min="0" ng-model="qty">
+		</div>
+
+		<div class="form-inline panel-body">
+			<div>Cost: </div>
+			<div class="form-group">
+				<input type="number" id="cost" class="form-control" min="0" ng-model="cost">
+			</div>
+			<div class="form-group">
+				<select class="form-control" ng-model="inCurr">
+				<!-- option tag가 currencies가 3개 만들어 지면서
+				내부적으로 c라는 변수를 갖게 된다 -->
+					<option ng-repeat="c in currencies">{{c}}</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="well" data-demo-tag>
+			<b>Total: </b>
+			<!-- 통화 필터 사용 => 표현값 | 필터명 : 필터옵션 
+			<span> {{ total('USD') | currency }}</span>
+			<span> {{ total('EUR') | currency }}</span>
+			<span> {{ total('CNY') | currency }}</span>
+			-->
+			
+			<span ng-repeat="c in currencies"> {{ total(c) | currency : c }} &nbsp;</span>
+			
+			<button class="btn btn-primary" ng-click="pay()">Pay</button>
+		</div>
+		
+	</div>
+
+</body>
+</html>

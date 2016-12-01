@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>CustomForms</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/ng-template" id="triTemplate">
+		<div class="well">
+			<div class="btn-group">
+				<button class="btn btn-default">Yes</button>
+				<button class="btn btn-default">No</button>
+				<button class="btn btn-default">Not Sure</button>
+			</div>
+		</div>
+	</script>
+	<script>
+		angular.module("exampleApp", [])
+		.controller("defaultCtrl", function ($scope) {
+			$scope.dataValue = "Not Sure";
+		})
+		
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+	<div><tri-button /></div>
+	<div class="well">
+			Value:
+			<select ng-model="dataValue">
+				<option>Yes</option>
+				<option>No</option>
+				<option>Not Sure</option>
+			</select>
+	</div>
+</body>
+</html>

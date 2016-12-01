@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Module</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var app = angular.module('app', []);
+		app.controller('mainCtrl', ['$scope', function ($scope) {
+			
+		}])
+	</script>
+</head>
+<body ng-controller="mainCtrl">
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>
+				Custeom Service
+				<span class="label label-primary">Module</span>
+			</h3>
+		</div>
+
+		<div class="panel-body"></div>
+	</div>
+	
+</body>
+</html>

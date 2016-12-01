@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>ngClass</title>
+	<style type="text/css">
+		.apple { background-color: red; }
+		.lemon { background-color: yellow; }
+		.even { background-color: darkgray; }
+
+		.strike { text-decoration: line-through; }
+		.bold { font-weight: bold; }
+		.red { color: red; }
+	</style>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+
+	<script type="text/javascript">
+		var app = angular.module('app', []);
+		app.controller('mainCtrl', ['$scope',function($scope){
+			$scope.fruits = ['apple','banana','lemon','tomato','grape']
+		}]);
+	</script>
+</head>
+<body ng-controller="mainCtrl">
+	<div class="panel">
+
+		<div class="panel-body well">
+			<h3>ngClass</h3>
+		</div>
+
+		<div class="panel-body">
+			<div>직접 적용: <span>ngClass</span></div>
+			<div>변수 이용: <span>ngClass</span></div>
+			<div>배열 이용: <span>ngClass</span></div>
+			<div>연상배열 이용: <span>ngClass</span></div>
+		</div>
+
+		<div class="panel-body">
+			<ul>
+				<li ng-repeat="fruit in fruits">{{fruit}}</li>
+			</ul>
+		</div>
+	</div>
+
+</body>
+</html>

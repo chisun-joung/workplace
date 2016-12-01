@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>DOM API Services</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		angular.module("exampleApp", [])
+		.controller("defaultCtrl", function ($scope, $timeout, $interval, $filter) {
+			
+			
+			// interval은 지정한 시간마다 1번씩 실행된다
+			// timeout은 경과 시간이 되면 딱 1번만 실행하고 종료한다.
+			var timer = $timeout(function(){
+				var today = $filter('date')(new Date(), 'medium');
+				$scope.time = today;
+				return today;
+			}, 3000)
+			
+			// promise 객체를 리턴해 준다.
+			timer.then(
+				// 성공적으로 실행되면 실행되는 함수	
+				function(data){
+				console.log(data);
+			}, function(data){
+				// 실행이 실패하면 실행되는 함수.
+				console.log(data);
+			})
+			
+			$scope.cancel = function(){
+				$timeout.cancel(timer);
+			}
+		});
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+	<div class="panel panel-default">
+		<h4 class="panel-heading">Time</h4>
+		<div class="panel-body">
+			The time is: {{time}}
+		</div>
+		<button ng-click="cancel()">Cancel</button>
+	</div>
+</body>
+</html>

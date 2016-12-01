@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>A02 Controller</title>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+</head>
+<body>
+
+	<div class="panel-default">
+		<div class="panel-heading">
+			<h3>Invoice</h3>
+		</div>
+
+		<div class="panel-body col-sm-5">
+			<div>Quantity: </div>
+			<input type="number" class="form-control" min="0">
+		</div>
+
+		<div class="form-inline panel-body">
+			<div>Cost: </div>
+			<div class="form-group">
+				<input type="number" id="cost" class="form-control" min="0">
+			</div>
+			<div class="form-group">
+				<select class="form-control">
+					<option></option>
+				</select>
+			</div>
+		</div>
+
+		<div class="well">
+			<b>Total: </b>
+			<span> </span> 
+			<button class="btn btn-primary">Pay</button>
+		</div>
+		
+	</div>
+
+</body>
+</html>
