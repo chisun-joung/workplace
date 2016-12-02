@@ -8,11 +8,11 @@
 		var app = angular.module('app', [])
 		app.controller('defaultCtrl', ['$scope', function ($scope) {
 			$scope.todos = [
-				{action: 'Get groceries', complate: false},
-				{action: 'Call plumber', complate: false},
-				{action: 'Buy running shoes', complate: true},
-				{action: 'Buy flowers', complate: false},
-				{action: 'Call family', complate: false}
+				{action: 'Get groceries', complete: false},
+				{action: 'Call plumber', complete: false},
+				{action: 'Buy running shoes', complete: true},
+				{action: 'Buy flowers', complete: false},
+				{action: 'Call family', complete: false}
 			];
 		}])
 	</script>
@@ -21,7 +21,7 @@
 	<div id="todoPanel" class="Panel" ng-controller="defaultCtrl">
 
 		<h3 class="panel-header">To Do List
-			<span class="label label-info"> </span>
+			<span class="label label-info">{{ (todos | filter:{complete:false}).length }}</span>
 		</h3>
 
 		<table class="table">
@@ -35,7 +35,7 @@
 			<tr ng-repeat="item in todos">
 				<td>{{$index + 1}}</td>
 				<td>{{item.action}}</td>
-				<td><input type="checkbox"></td>
+				<td><input type="checkbox" ng-model="item.complete"></td>
 			</tr>
 		</table>
 

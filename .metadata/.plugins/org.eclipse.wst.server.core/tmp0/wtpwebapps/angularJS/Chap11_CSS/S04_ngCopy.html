@@ -12,6 +12,8 @@
 			$scope.result = 'None';
 			
 			$scope.copy = function(evt){
+				// 기존 이벤트의 명령 중지.
+				evt.preventDefault();
 				$scope.result = 'COPY';
 			}
 			$scope.cut = function(){
@@ -32,7 +34,11 @@
 		</div>
 
 		<div class="panel-body">
-			<textarea rows="10" cols="50"></textarea>
+			<!-- javascript에서 event 전달 키워드 => event
+				angular에서 event 전달 키워드 => $event
+			 -->
+			<textarea rows="10" cols="50"
+				ng-copy="copy($event)" ng-cut="cut()" ng-paste="paste()"></textarea>
 			<div>Status: {{result}}</div>
 		</div>
 	</div>

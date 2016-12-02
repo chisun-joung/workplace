@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Forms</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		// angular를 1.3 버전 사용
+		angular.module("exampleApp", [])
+			.controller('defaultCtrl', function($scope){
+				$scope.message = 'Ready';
+
+				$scope.addUser = function(user){
+					$scope.message = user.name + " (" + user.email + ") (" + user.ok + ")";
+				}
+			})
+	</script>
+</head>
+<style type="text/css">
+	form .ng-invalid.ng-dirty { background-color: lightpink }
+	form .ng-valid.ng-dirty { background-color: lightgreen }	
+	span.summary.valid { color:green; font-weight: bold; }
+	span.summary.invalid { color: red; }
+	div.error { color:red; font-weight: bold; }
+</style>
+<body>
+	<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+		<form name="myForm" novalidate>
+			<div class="well">
+				<div class="form-group">
+					<label>Name: {{myForm.userName.$touched}}</label>
+					<input name="userName" type="text" class="form-control" minlength="3" ng-maxlength="8" required ng-model="user.name">
+					<div class="error" ng-show="myForm.userName.$touched && myForm.userName.$invalid">
+						<small ng-show="myForm.userName.$error.required">Please enter a value</small>
+						<small ng-show="myForm.userName.$error.minlength">Min 3</small>
+						<small ng-show="myForm.userName.$error.maxlength">Max 10</small>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Email: {{myForm.userEmail.$touched}}</label>
+					<input name="userEmail" type="email" class="form-control" required ng-model="user.email">
+					<div class="error" ng-show="myForm.userEmail.$touched && myForm.userEmail.$invalid">
+						<small ng-show="myForm.userEmail.$error.required">Please enter a email address.</small>
+						<small ng-show="myForm.userEmail.$error.email">Is not E-Mail address</small>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label>URL: {{myForm.url.$dirty}}</label>
+					<input type="url" name="url" class="form-control" required ng-model="user.url">
+					<div class="error">
+						<small ng-show="myForm.url.$error.required">Please enter a url address.</small>
+						<small ng-show="myForm.url.$error.url">Is not URL address</small>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Number: {{myForm.qty.$dirty}}</label>
+					<input type="number" name="qty" class="form-control" min=0 max=10 required ng-model="user.number">
+					<div class="error">
+						<small>Please enter a email address.</small>
+						<small>Min 0.</small>
+						<small>Max 10.</small>
+						<small>Not a number.</small>
+					</div>
+				</div>
+				<div class="form-group">
+					<label>TEL: {{myForm.tel.$dirty}}</label>
+					<input type="text" name="tel" class="form-control" required ng-pattern="/^\d{2,3}-\d{3,4}-\d{4}$/" ng-model="user.tel">
+					<div class="error">
+						<small ng-show="myForm.tel.$error.required">Please enter a value.</small>
+						<small ng-show="myForm.tel.$error.pattern">000-0000-0000 / 00-000-0000.</small>
+					</div>
+				</div>
+
+				<div class="checkbox">
+					<label>
+						<input name="agreed" type="checkbox" required ng-model="user.ok">
+						I agree to the terms and conditions
+					</label>
+				</div>
+				<button type="submit" class="btn btn-primary btn-block" ng-disabled="myForm.$invalid">
+					OK
+				</button>
+			</div>
+			<div class="well">
+				Message: {{message}}
+				<div>
+					Valid: <span class="summary">{{myForm.$valid}}</span>
+				</div>
+			</div>
+		</form>
+	</div>
+</body>
+</html>

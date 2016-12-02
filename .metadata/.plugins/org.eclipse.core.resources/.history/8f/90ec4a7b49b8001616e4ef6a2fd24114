@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<meta charset="UTF-8">
+	<title>Route</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-route.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript">
+		var demo = angular.module('demo', ['ngRoute']);
+		demo.config(['$routeProvider', function($routeProvider){
+			$routeProvider
+				.when('/home', {templateUrl: 'data/home.html'})
+				.when('/about', {templateUrl: 'data/about.html'})
+				.when('/content', {templateUrl: 'data/content.html'});
+		}])	
+		
+		var app = angular.module('app',['demo']);
+		app.controller('defaultCtrl', ['$scope', function ($scope) {
+			
+		}])
+	</script>
+</head>
+<body ng-controller="defaultCtrl">
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h3>Route</h3>
+			<div><a href="#home">홈</a> | <a href="#about">회사에 대하여</a> | <a href="#content">회사 연락</a></div>
+		</div>
+
+		<div class="panel-body">
+			<ng-view></ng-view>
+		</div>
+
+	<div>
+	
+</body>
+
+</html>

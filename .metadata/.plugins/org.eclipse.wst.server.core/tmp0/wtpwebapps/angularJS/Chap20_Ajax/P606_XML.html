@@ -13,30 +13,32 @@
 			$scope.loadData = function () {
 				var http = $http({
 					method: 'GET',
-					url:'data/productData.xml'
+					url: 'data/productData.xml'
 				});
 				
 				http.success(function(data){
 					console.log(data);
 					
+					// XML 자료를 Object 형태로 변경
 					var items = angular.element(data).find('product');
 					
 					for(var i = 0; i < items.length; i++){
-						console.log(status)
+						// 검색된 product를 하나씩 item에 대입해서
 						var item = items.eq(i);
 						
+						// 속성을 Object 형태로 변경해서 추가한다.
 						$scope.products.push({
 							name: item.attr('name'),
 							category: item.attr('category'),
 							price: item.attr('price'),
 							expiry: item.attr('expiry')
-							})
-						}
+						})
+					}
 				})
 				
 				http.error(function(data, status){
-					console.log(status);
-				})
+					console.log(status)
+				});
 			}
 		});
 	</script>

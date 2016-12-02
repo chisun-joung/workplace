@@ -6,6 +6,10 @@
 	<link href="bootstrap.css" rel="stylesheet" />
 	<link href="bootstrap-theme.css" rel="stylesheet" />
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<style type="text/css">
+		#myForm .ng-invalid { background-color: orange }
+		#myForm .ng-valid { background-color: lightgreen }
+	</style>
 </head>
 <body>
 
@@ -15,8 +19,8 @@
 		</div>
 		<div class="panel-body">
 			<form name="myForm" id="myForm">
-				Name: <input type="text" name="name" maxlength="5" class="form-control" required>
-				Phone: <input type="text" name="tel" class="form-control" required>
+				Name: <input type="text" ng-model="name" name="name" maxlength="5" class="form-control" required>
+				Phone: <input type="text" ng-model="phone" name="tel" class="form-control" required>
 			</form>
 		</div>
 	</div>

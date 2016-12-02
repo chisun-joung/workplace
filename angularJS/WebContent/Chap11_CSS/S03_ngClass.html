@@ -31,18 +31,27 @@
 		</div>
 
 		<div class="panel-body">
-			<div>직접 적용: <span>ngClass</span></div>
-			<div>변수 이용: <span>ngClass</span></div>
-			<div>배열 이용: <span>ngClass</span></div>
-			<div>연상배열 이용: <span>ngClass</span></div>
+			<!-- ng-class=""에서 지정하는 값도 변수 참조 -->
+			<div>직접 적용: <span ng-class="'apple'">ngClass</span></div>
+			<div>변수 이용: <span ng-class="fruits[2]">ngClass</span></div>
+			<div>배열 이용: <span ng-class="[ fruits[2], 'bold' ]">ngClass</span></div>
+			<div>연상배열 이용: <span ng-class="{ bold: false, lemon:true }">ngClass</span></div>
 		</div>
 
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="fruit in fruits">{{fruit}}</li>
+				<li ng-repeat="fruit in fruits" ng-class="$index % 3 == 0 ? 'lemon' : ''">{{fruit}}</li>
+			</ul>
+		</div>
+		
+		<div class="panel-body">
+			<ul>
+				<!-- ng-class-even => 짝수, ng-class-odd => 홀수 -->
+				<li ng-repeat="fruit in fruits" ng-class-even="'bold'">{{fruit}}</li>
 			</ul>
 		</div>
 	</div>
 
 </body>
 </html>
+

@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Ajax</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		var demo = angular.module('demo', []);
+		demo.factory('httpFactory', ['$http', function($http){
+			var result;
+			
+			var getHttp = function(method, url, params, data){
+				console.log('2. HTTP 실행')
+				var http = $http({
+					method: method,
+					url: url,
+					params: params,
+					data: data
+				});
+				
+				http.success(function(data){
+					console.log('3. HTTP 성공')
+					result = data;
+				});
+				
+				http.error(function(data, status){
+					console.log('3. HTTP 실패')
+					console.log(status);
+				});
+			}
+			
+			var getResult = function(){
+				console.log('4. Result Return')
+				return result;
+			}
+			
+			return {
+				getResult: getResult,
+				getHttp: getHttp
+			}
+		}]);
+		
+		angular.module("exampleApp", ['demo'])
+		.controller("defaultCtrl", function ($scope, httpFactory) {
+			
+			
+			$scope.loadData = function () {
+				console.log('1. 요청')
+				httpFactory.getHttp('GET', 'data/productData.json');
+				
+				console.log('5. 결과값 스코프에 저장')
+				//$scope.products = httpFactory.getResult();
+				
+				// 값이 들어오면 그때 바인딩해서 사용하자
+				$scope.$watch(httpFactory.getResult, function(nv){
+					$scope.products = nv;
+				})
+				
+			}
+		});
+	</script>
+
+
+</head>
+<body ng-controller="defaultCtrl">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<table class="table table-striped table-bordered">
+				<thead><tr><th>Name</th><th>Category</th><th>Price</th></tr></thead>
+				<tbody>
+					<tr ng-hide="products.length">
+						<td colspan="3" class="text-center">No Data</td>
+					</tr>
+					<tr ng-repeat="item in products">
+						<td>{{item.name}}</td>
+						<td>{{item.category}}</td>
+						<td>{{item.price | currency}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><button class="btn btn-primary" 
+					   ng-click="loadData()">Load Data</button></p>
+		</div>
+	</div>
+</body>
+</html>
+

@@ -8,12 +8,41 @@
 	</style>
 	<link href="bootstrap.css" rel="stylesheet" />
 	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.js"></script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
 	<script type="text/javascript">
 		var app = angular.module('app', []);
 		app.controller('mainCtrl', ['$scope', function($scope){
+			
 			$scope.value = {color: 'blue', fontWeight: 'bold'};
 
+			$scope.setColor = function(){
+				$scope.value.color = 'green';
+			}
+			
+			// 속성이 없으면 추가
+			$scope.setBackground = function(){
+				$scope.value.backgroundColor = 'gary';
+			}
+			
+			// 모든 속성을 삭제
+			$scope.reset = function(){
+				$scope.value = {}
+				//$scope.value = {fontStyle:'italic'}
+			}
+			
+			// text의 값을 변경
+			// angular.element(id, class) => 로 리턴해 준다
+			// jqLite 객체 => jquer의 경량화 버전.
+			// jquery의 일부 명령만 사용 가능
+			// 귀찮으면 jquery를 올려서 사용. jquery가 올라가 있으면
+			// angular.element(id, class)는 jquery 객체를 리턴
+			$scope.changeText = function(){
+				var elem = angular.element(document.getElementById('txt'));
+				console.log(elem)
+				elem.text('New Text')
+				elem.css('color', 'red')
+			}
 		}]);
 	</script>
 </head>
@@ -26,17 +55,20 @@
 		</div>
 
 		<div class="panel-body">
-			<div>Value: </div>
-			<div>Color: </div>
-			<div>직접 적용: <span>ngStyle</span></div>
-			<div>변수 이용: <span>ngStyle</span></div>
+			<div>Value: {{value}}</div>
+			<div>Color: {{value.color}}</div>
+			<!-- css 명령에 '-'가 포함된 명령은 명령을 ''을 이용해 문자열로 지정해야 한다
+				또는 -를 빼고 그 다음 문자를 대문자로 표시해서 사용 -->
+			<div>직접 적용: <span ng-style="{color:'orange', 'font-weight':'bold'}">ngStyle</span></div>
+			<div>직접 적용: <span ng-style="{color:'orange', fontWeight:'bold'}">ngStyle</span></div>
+			<div>변수 이용: <span id="txt" ng-style="value">ngStyle</span></div>
 		</div>
 
 		<div class="panel-body">
-			<button class="btn btn-default">Set Color</button>
-			<button class="btn btn-default">Set BackGround</button>
-			<button class="btn btn-default">Set Text</button>
-			<button class="btn btn-default">Reset</button>
+			<button class="btn btn-default" ng-click="setColor()">Set Color</button>
+			<button class="btn btn-default" ng-click="setBackground()">Set BackGround</button>
+			<button class="btn btn-default" ng-click="changeText()">Set Text</button>
+			<button class="btn btn-default" ng-click="reset()">Reset</button>
 		</div>
 	</div>
 	

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app">
 <head>
 	<meta charset="UTF-8">
 	<title>Profit</title>
@@ -8,11 +8,73 @@
 	<link href="bootstrap-theme.css" rel="stylesheet" />
 	<script type="text/javascript">
 		var demo = angular.module('demo', []);
+		demo.constant('baseURL', 'http://localhost:8080/AngularJS/');
+		demo.factory('httpFactory', ['$http','$q','baseURL', 
+		                             function($http,$q,baseURL){
+			var deferred;
+			var promise;
+			
+			var getHttp = function(method, url, params){
+				deferred = $q.defer();
+				promise = deferred.promise;
+				
+				var http = $http({
+					method: method,
+					url: baseURL + url,
+					params: params
+				})
+				
+				http.success(function(data){
+					deferred.resolve(data)
+				});
+				
+				http.error(function(data,status){
+					deferred.reject({
+						data: data,
+						status: status
+					})
+				})
+			}
+			
+			var getPromise = function(){
+				return promise;
+			}
+			
+			return {
+				getPromise: getPromise,
+				getHttp: getHttp
+			}
+		}]);
 		
-		
+		var app = angular.module('app', ['demo']);
+		app.controller('defaultCtrl', ['$scope', 'httpFactory', 
+		                 function($scope,httpFactory){
+			
+			$scope.selectYear = 'all';
+			
+			$scope.getYear = function(){
+				// 매개변수 params 값에 넘길 값은 객체형으로 작성해서 전달
+				var args = {year: $scope.selectYear};
+				
+				// 매개변수도 함께 전달
+				httpFactory.getHttp('GET', 'profitList', args)
+				
+				// promise 객체 받기
+				var promise = httpFactory.getPromise();
+				promise.then(function(data){
+					console.log(data);
+					
+					$scope.profit = data.profit;
+				}, function(data){
+					console.log(data.status);
+				})
+			}
+			
+			$scope.getYear();
+		}])
 	</script>
 </head>
-<body>
+<body ng-controller="defaultCtrl">
 	<div class="panel panel-default">
 		<div class="panel-heading">
 			<h3>
@@ -23,14 +85,14 @@
 
 		<div class="panel-body form-inline">
 			<div class="form-group">
-	    		<select class="form-control">
+	    		<select class="form-control" ng-model="selectYear">
 					<option value="all">All</option>
 					<option value="2014">2014</option>
 					<option value="2015">2015</option>
 				</select>
 	    	</div>
 			<div class="form-group">
-	    		<button class="btn btn-primary">Change</button>
+	    		<button class="btn btn-primary" ng-click="getYear()">Change</button>
 	    	</div>
 	    </div>
     	<div class="panel-body">
@@ -46,13 +108,13 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
-						<td></td>
+					<tr ng-repeat="p in profit">
+						<td>{{p.year}}</td>
+						<td>{{p.month}}</td>
+						<td>{{p.expenses}}</td>
+						<td>{{p.profit}}</td>
+						<td>{{p.amount}}</td>
+						<td>{{p.comment}}</td>
 					</tr>
 				</tbody>
 			</table>

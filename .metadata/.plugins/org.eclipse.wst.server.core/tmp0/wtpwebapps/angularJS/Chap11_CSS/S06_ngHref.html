@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app>
 	<head>
 	<meta charset="UTF-8">
 	<title>ngHref / ngSrc</title>
@@ -9,7 +9,7 @@
 </head>
 <body>
 
-	<div ng-class="panel well">
+	<div class="panel well">
 
 		<div class="panel-header well">
 			<h3>$event</h3>
@@ -18,16 +18,25 @@
 		<div class="panel-body">
 			<input type="text" class="form-control" ng-model="value"><br>
 	
-			<a>Link 1</a>(link, don't reload)<br>
-			<a>Link 2</a>(link, don't reload)<br>
-			<a>Link 3</a>(link, reload)<br>
+			<!-- 일반 => 리로드, angular => 리로드 안함 -->
+			<a href="" ng-click="">Link 1</a>(link, don't reload)<br>
+			<a href>Link 2</a>(link, don't reload)<br>
+			<a href="a">Link 3</a>(link, reload)<br>
 			
-			<a>Anchor</a>(link, reload)<br>
-			<a>Anchor</a> (no link)<br>
-			<a>Anchor</a> (link, change location)<br>
+			<a name="xx" href="">Anchor</a>(link, reload)<br>
 			
+			<!-- name만 있는 상태에서는 값이 있어도 리로드 안됨 -->
+			<a name="zz">Anchor</a> (no link)<br>
+			
+			<!-- angular가 제공하는 href 
+				ng-href에 값이 바인딩 되기 전까지는 링크가 걸리지 않는다
+			-->
+			<a ng-href="http://www.naver.com">Anchor</a> (link, change location)<br>
+			
+			<!-- 이미지가 로드되기 전까지는 표시되지 않음 
+			일반적인 X표시도 되지 않는다. -->
 			<img src="data/img.jpg"><br>
-			<img ng-src="">
+			<img ng-src="data/img.jpg">
 		</div>
 		
 	</div>

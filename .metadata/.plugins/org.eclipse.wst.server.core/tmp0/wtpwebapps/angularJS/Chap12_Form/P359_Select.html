@@ -12,6 +12,10 @@
 					{ id: 100, action: "Get groceries", complete: false },
 					{ id: 200, action: "Call plumber", complete: false },
 					{ id: 300, action: "Buy running shoes", complete: true }];
+				
+				$scope.value = 'Call plumber';
+				
+				$scope.action = 'Call plumber';
 			});
 	</script>
 </head>
@@ -21,12 +25,38 @@
 			<div class="well">
 				<div class="form-group">
 					<label>Select an Action:</label>
-					<select></select>
+					<select ng-model="value">
+						<!-- 첫 항목에 value 옵션이 없으면 빈자리로 표시 -->
+						<option value="">Select One</option>
+						<option ng-repeat="item in todos">{{item.action}}</option>
+					</select>
+				</div>
+				
+				<div class="form-group">
+					<label>Select an Action:</label>
+					<!-- ng-options="mgModel에 저장될 값 as 표시할 테이터 for 변수명 in 변수그룹"
+						ng-model과 매칭되는 값이 없으면 빈칸 생성
+					 -->
+					<select ng-model="value" 
+						ng-options="item.action as item.action for item in todos">
+					</select>
+				</div>
+				
+				<div class="form-group">
+					<label>Select an Action:</label>
+					<!-- ng-options="mgModel에 저장될 값 as 표시할 테이터 for 변수명 in 변수그룹"
+						ng-model과 매칭되는 값이 없으면 빈칸 생성
+					 -->
+					<select ng-model="value" 
+						ng-options="item.action as item.action for item in todos">
+						<!-- 첫 항목에 value 옵션이 없으면 빈자리로 표시 -->
+						<option value="">Select One</option>
+					</select>
 				</div>
 			</div>
 
 			<div class="well">
-				<p>Selected: </p>
+				<p>Selected: {{value}}</p>
 			</div>
 		</form>
 	</div>

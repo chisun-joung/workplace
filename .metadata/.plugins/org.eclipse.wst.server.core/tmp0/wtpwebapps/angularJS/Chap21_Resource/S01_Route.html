@@ -4,10 +4,29 @@
 	<meta charset="UTF-8">
 	<title>Route</title>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular-route.js"></script>
 	<link href="bootstrap.css" rel="stylesheet" />
 	<link href="bootstrap-theme.css" rel="stylesheet" />
 	<script type="text/javascript">
-		var app = angular.module('app',[]);
+		var demo = angular.module('demo', ['ngRoute']);
+		demo.config(['$routeProvider', function($routeProvider){
+			$routeProvider
+				.when('/home', {templateUrl: 'data/home.html'})
+				.when('/about', {templateUrl: 'data/about.html', controller: 'aboutCtrl'})
+				.when('/content', {templateUrl: 'data/content.html', controller: 'contentCtrl'})
+				.otherwise({redirectTo: '/home'})
+		}])	
+		
+		demo.controller('aboutCtrl',['$scope', function($scope){
+			$scope.sales = 1000;
+		}])
+		
+		demo.controller('contentCtrl',['$scope', function($scope){
+			$scope.contentSubmit = function(content){
+				window.alert(content.name + ' : ' + content.contents);
+			}
+		}])
+		var app = angular.module('app',['demo']);
 		app.controller('defaultCtrl', ['$scope', function ($scope) {
 			
 		}])

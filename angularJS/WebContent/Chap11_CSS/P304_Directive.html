@@ -28,7 +28,7 @@
 		<div class="checkbox well">
 			<label>
 				<input type="checkbox">
-				Item 3 ins complate
+				Item {{ (todos | filter:{complate:false}).length }} ins complate
 			</label>
 		</div>
 		
@@ -43,7 +43,14 @@
 			<tr ng-repeat="item in todos">
 				<td>{{$index + 1}}</td>
 				<td>{{item.action}}</td>
-				<td>{{item.complate}}</td>
+				<td>
+					<!-- CSS 기반의 display를 사용. 즉 태그는 존재
+						ng-show="true or false"
+						ng-hide="true or false"
+					 -->
+					<span ng-hide="item.complate">(Incomplate)</span>
+					<span ng-show="item.complate">(Done)</span>
+				</td>
 			</tr>
 		</table>
 	</div>

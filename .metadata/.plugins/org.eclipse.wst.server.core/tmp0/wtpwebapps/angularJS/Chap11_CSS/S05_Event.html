@@ -11,6 +11,20 @@
 		app.controller('mainCtrl', ['$scope',function($scope){
 			$scope.outer = $scope.inner = $scope.bubbling = 0;
 
+			$scope.outerClick = function(){
+				$scope.outer++;
+				
+			}
+			$scope.innerClick = function(evt){
+				console.log(evt.target.innerText)
+				$scope.inner++;
+			}
+			$scope.bubbleClick = function(evt){
+				$scope.bubbling++;
+				
+				// 상위 요소에 이벤트 전파 차단
+				evt.stopPropagation();
+			}
 		}]);
 	</script>
 </head>
@@ -21,10 +35,10 @@
 			<h3>$event</h3>
 		</div>
 
-		<div class="panel-body">
+		<div class="panel-body" ng-click="outerClick()">
 			<p>외부 영역</p>
-			<button class="btn btn-primary">Inner</button>
-			<button class="btn btn-warning">Stop</button>
+			<button class="btn btn-primary" ng-click="innerClick($event)">Inner</button>
+			<button class="btn btn-warning" ng-click="bubbleClick($event)">Stop</button>
 		</div>
 		
 		<div class="panel-body">

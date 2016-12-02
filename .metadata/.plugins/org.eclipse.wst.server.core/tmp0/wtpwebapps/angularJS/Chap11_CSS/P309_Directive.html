@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title>Directive</title>
+	<link rel="stylesheet" type="text/css" href="bootstrap.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script type="text/javascript">
+		var app = angular.module('app', [])
+		app.controller('defaultCtrl', ['$scope', function ($scope) {
+			$scope.todos = [
+				{action: 'Get groceries', complate: false},
+				{action: 'Call plumber', complate: false},
+				{action: 'Buy running shoes', complate: true},
+				{action: 'Buy flowers', complate: false},
+				{action: 'Call family', complate: false}
+			];
+		}])
+	</script>
+	<style>
+		td > *:first-child { font-weight: bold; }
+	</style>	
+</head>
+<body>
+
+	<div id="todoPanel" class="panel" ng-controller="defaultCtrl">
+		<h3 class="panel-header">To Do List</h3>
+
+		<div class="checkbox well">
+			<label>
+				<input type="checkbox">
+				Item {{ (todos | filter:{complate:false}).length }} ins complate
+			</label>
+		</div>
+		
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Action</th>
+					<th>Done</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="item in todos" ng-hide="item.complate">
+				<td>{{$index + 1}}</td>
+				<td>{{item.action}}</td>
+				<td>{{item.complate}}</td>
+			</tr>
+		</table>
+		
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Action</th>
+					<th>Done</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="item in todos" ng-if="!item.complate">
+				<td>{{$index + 1}}</td>
+				<td>{{item.action}}</td>
+				<td>{{item.complate}}</td>
+			</tr>
+		</table>
+		
+		<!-- 필터를 이용해서 아예 걸러내고 표시하자 -->
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Action</th>
+					<th>Done</th>
+				</tr>
+			</thead>
+			<tr ng-repeat="item in todos | filter:{complate:false}">
+				<td>{{$index + 1}}</td>
+				<td>{{item.action}}</td>
+				<td>{{item.complate}}</td>
+			</tr>
+		</table>
+	</div>
+
+
+</body>
+</html>

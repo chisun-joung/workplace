@@ -1,13 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="app">
 <head>
 	<meta charset="UTF-8">
 	<title>Model Option</title>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.9/angular.js"></script>
 	<link href="bootstrap.css" rel="stylesheet" />
 	<link href="bootstrap.css" rel="stylesheet" />
+	
+	<!-- 1.3에서 추가된 기능 -->
+	<script type="text/javascript">
+		var app = angular.module('app', []);
+		app.controller('mainCtrl', function($scope){
+			$scope.name = 'Hong'
+		})
+	</script>
 </head>
-<body>
+<body ng-controller="mainCtrl">
 
 	<div class="panel well">
 		<div class="panel-header">
@@ -15,17 +23,29 @@
 		</div>
 
 		<div class="panel-body">
-			Name: <input type="text" class="form-control"><br>
-			ID: <input type="text" class="form-control"><br>
-			Address: <input type="text" class="form-control"><br>
-			Other Data: <input type="text" class="form-control"><br>
+			Name: <input type="text" class="form-control" ng-model="name"><br>
+			
+			<!-- 지연 -->
+			ID: <input type="text" class="form-control" 
+				ng-model="id" ng-model-options="{debounce: 1000}"><br>
+				
+			<!-- Event -->
+			Address: <input type="text" class="form-control" 
+				ng-model="add" ng-model-options="{updateOn:'blur'}"><br>
+				
+			Other Data: <input type="text" class="form-control" 
+				ng-model="other"
+				ng-model-options="{ updateOn:'default blur', debounce: {default:500, blur:0} }"><br>
 		</div>
 		
 		<div class="panel-body">
-			<div>User Name: </div>
-			<div>User ID: </div>
-			<div>User Address: </div>
-			<div>Other Data: </div>
+			<div>User Name: {{name}}</div>
+			<div>User ID: {{id}}</div>
+			<div>User Address: {{add}}</div>
+			<div>Other Data: {{other}}</div>
+			
+			<!-- 최초 1번만 바인딩 되고 변경 안됨 -->
+			<div>Name: {{::name}}</div>
 		</div>
 
 	</div>

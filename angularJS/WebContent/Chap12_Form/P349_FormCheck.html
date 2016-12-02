@@ -28,33 +28,33 @@
 		<form name="myForm" novalidate>
 			<div class="well">
 				<div class="form-group">
-					<label>Name:</label>
-					<input name="userName" type="text" class="form-control" ng-minlength="3" ng-maxlength="8" required ng-model="user.name">
+					<label>Name: {{myForm.userName.$error}}</label>
+					<input name="userName" type="text" class="form-control" minlength="3" ng-maxlength="8" required ng-model="user.name">
 					<div class="error">
-						<small>Please enter a value</small>
-						<small>Min 3</small>
-						<small>Max 10</small>
+						<small ng-show="myForm.userName.$error.required">Please enter a value</small>
+						<small ng-show="myForm.userName.$error.minlength">Min 3</small>
+						<small ng-show="myForm.userName.$error.maxlength">Max 10</small>
 					</div>
 				</div>
 				<div class="form-group">
-					<label>Email:</label>
+					<label>Email: {{myForm.userEmail.$error}}</label>
 					<input name="userEmail" type="email" class="form-control" required ng-model="user.email">
 					<div class="error">
-						<small>Please enter a email address.</small>
-						<small>Is not E-Mail address</small>
+						<small ng-show="myForm.userEmail.$error.required">Please enter a email address.</small>
+						<small ng-show="myForm.userEmail.$error.email">Is not E-Mail address</small>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label>URL:</label>
+					<label>URL: {{myForm.url.$error}}</label>
 					<input type="url" name="url" class="form-control" required ng-model="user.url">
 					<div class="error">
-						<small>Please enter a url address.</small>
-						<small>Is not URL address</small>
+						<small ng-show="myForm.url.$error.required">Please enter a url address.</small>
+						<small ng-show="myForm.url.$error.url">Is not URL address</small>
 					</div>
 				</div>
 				<div class="form-group">
-					<label>Number:</label>
+					<label>Number: {{myForm.qty.$error}}</label>
 					<input type="number" name="qty" class="form-control" min=0 max=10 required ng-model="user.number">
 					<div class="error">
 						<small>Please enter a email address.</small>
@@ -64,11 +64,11 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label>TEL:</label>
+					<label>TEL: {{myForm.tel.$error}}</label>
 					<input type="text" name="tel" class="form-control" required ng-pattern="/^\d{2,3}-\d{3,4}-\d{4}$/" ng-model="user.tel">
 					<div class="error">
-						<small>Please enter a value.</small>
-						<small>000-0000-0000 / 00-000-0000.</small>
+						<small ng-show="myForm.tel.$error.required">Please enter a value.</small>
+						<small ng-show="myForm.tel.$error.pattern">000-0000-0000 / 00-000-0000.</small>
 					</div>
 				</div>
 
