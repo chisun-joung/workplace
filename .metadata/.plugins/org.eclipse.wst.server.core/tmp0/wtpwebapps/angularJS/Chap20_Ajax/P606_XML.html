@@ -11,7 +11,32 @@
 			$scope.products = [];
 			
 			$scope.loadData = function () {
+				var http = $http({
+					method: 'GET',
+					url:'data/productData.xml'
+				});
 				
+				http.success(function(data){
+					console.log(data);
+					
+					var items = angular.element(data).find('product');
+					
+					for(var i = 0; i < items.length; i++){
+						console.log(status)
+						var item = items.eq(i);
+						
+						$scope.products.push({
+							name: item.attr('name'),
+							category: item.attr('category'),
+							price: item.attr('price'),
+							expiry: item.attr('expiry')
+							})
+						}
+				})
+				
+				http.error(function(data, status){
+					console.log(status);
+				})
 			}
 		});
 	</script>

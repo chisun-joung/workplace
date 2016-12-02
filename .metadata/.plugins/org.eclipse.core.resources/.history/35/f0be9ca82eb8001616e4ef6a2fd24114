@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html ng-app="exampleApp">
+<head>
+	<title>Ajax</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.js"></script>
+	<link href="bootstrap.css" rel="stylesheet" />
+	<link href="bootstrap-theme.css" rel="stylesheet" />
+	<script>
+		var demo = angular.module('demo', []);
+		demo.factory('httpFactory',['$http','$q',function($http,$q){
+			//var result;
+			
+			// Promise object : it waits a result  / resolve /reject
+			var deferred;
+			var promise;
+			
+			var getHttp = function(method, url, params, data){
+				deferred = $q.defer();
+				promise = deferred.promise;
+				
+				var http = $http({
+					method: method,
+					url: url,
+					params: params,
+					data: data
+				});
+				
+				http.success(function(data){
+					//result = data;
+					deferred.resolve(data);
+				});
+				
+				http.error(function(data, status){
+					//console.log(status);
+					deferred.reject({
+						data: data,
+						status: status
+					});
+				});
+			}
+			
+			var getPromise = function() {
+				return promise;
+			}
+			
+			return {
+				getPromise: getPromise,
+				getHttp: getHttp
+			}
+			
+		}]);
+		
+		angular.module("exampleApp", ['demo'])
+		.controller("defaultCtrl", function ($scope, httpFactory) {
+			$scope.products = [];
+			
+			$scope.loadData = function () {
+				
+				httpFactory.getHttp('GET','data/productData.json');
+				//$scope.products = httpFactory.getResult();
+				
+				/* $scope.$watch(httpFactory.getResult, function(nv){
+					$scope.products = nv;
+				}) */
+				
+				httpFactory.getPromise().then(function(data){
+					$scope.products = data;
+				}, function(data){
+					console.log(data.status);
+				});
+			}
+		});
+	</script>
+
+
+</head>
+<body ng-controller="defaultCtrl">
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<table class="table table-striped table-bordered">
+				<thead><tr><th>Name</th><th>Category</th><th>Price</th></tr></thead>
+				<tbody>
+					<tr ng-hide="products.length">
+						<td colspan="3" class="text-center">No Data</td>
+					</tr>
+					<tr ng-repeat="item in products">
+						<td>{{item.name}}</td>
+						<td>{{item.category}}</td>
+						<td>{{item.price | currency}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<p><button class="btn btn-primary" 
+					   ng-click="loadData()">Load Data</button></p>
+		</div>
+	</div>
+</body>
+</html>
