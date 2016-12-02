@@ -7,22 +7,35 @@
     <link href="bootstrap-theme.css" rel="stylesheet" />
     <script type="text/javascript">
     	var app = angular.module('exampleApp', []);
-    	app.controller('defaultCtrl', ['$scope',function($scope){
+    	app.constant('baseURL', 'http://localhost:5500/products/');
+    	app.controller('defaultCtrl', ['$scope','$http','baseURL',
+    	                        function($scope,$http,baseURL){
     		$scope.displayMode = 'list';
     		$scope.currentProduct = null;
     		
     		$scope.listProducts = function(){
-    			$scope.products = [
-					{ id: 0, name: "Dummy1", category: "Test", price: 1.25 },
-					{ id: 1, name: "Dummy2", category: "Test", price: 2.45 },
-					{ id: 2, name: "Dummy3", category: "Test", price: 4.25 }            
-    			]
+    			$http({
+    				method: 'get',
+    				url: baseURL
+    			}).success(function(data){
+    				$scope.products = data;
+    			}).error(function(data,status){
+    				console.log(status)
+    			})
     		}
     		
     		$scope.listProducts();
     		
     		$scope.deleteProduct = function(product){
-    			$scope.products.splice($scope.products.indexOf(product), 1);
+    			$http({
+    				method: 'delete',
+    				url: baseURL + product.id
+    			}).success(function(data){
+    				$scope.products.splice($scope.products.indexOf(product), 1);
+    			}).error(function(data,status){
+    				console.log(status)
+    			})
+    			
     		}
     		
     		// id 존재 여부에따라 새 게시물 저장 또는 수정 함수 실행
@@ -35,17 +48,45 @@
     		}
     		
     		$scope.createProduct = function(product){
-    			product.id = $scope.products.length;
-    			$scope.products.push(product);
+    			$http({
+    				method: 'post',
+    				url: baseURL,
+    				data: product			// 전달받은 객체를 그대로 전달하여 입력
+    			}).success(function(data){
+    				console.log("Create; " + data);
+    				
+    				// id까지 포함된 입력된 데이터를 리턴해준다.
+    				//product.id = $scope.products.length;
+        			$scope.products.push(data);
+        			
+        			
+    			}).error(function(data,status){
+    				console.log(status)
+    			})
+    			
     			$scope.displayMode = 'list';
     		}
     		
     		$scope.updateProduct = function(product){
-    			for(var i = 0; i < $scope.products.length; i++){
-    				if(product.id == $scope.products[i].id){
-    					$scope.products[i] = product;
-    				}
-    			}
+    			$http({
+    				method: 'put',
+    				url: baseURL + product.id,
+    				data: product		// 전달받은 객체를 그대로 전달하여 변경
+    			}).success(function(data){
+    				console.log("Update: " + data);
+    				
+    				for(var i = 0; i < $scope.products.length; i++){
+        				if(product.id == $scope.products[i].id){
+        					$scope.products[i] = product;
+        				}
+        			}
+        			
+        			
+    			}).error(function(data,status){
+    				console.log(status)
+    			})
+    			
+    			
     			$scope.displayMode = 'list';
     		}
     		
